@@ -1,2 +1,14 @@
 # cs157a
 Main project 
+
+## Setting up MySQL on a Mac
+* Install homebrew -> [brew.sh](http://brew.sh)
+* Open terminal and type `brew search mysql`
+* Brew will show the mysql options
+* type `brew install mysql` and if you want to intall workbench `brew install Caskroom/cask/mysqlworkbench`
+* brew may prompt you to run some setup commands before the above will work
+
+## Run MySQL on a Mac
+* Open terminal and type `mysqld` this starts the server.
+* Open a new terminal window and type `mysql -u root` to access the running server
+* root is the default user in mysql and can be changed
