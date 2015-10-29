@@ -12,3 +12,8 @@ Main project
 * Open terminal and type `mysqld` this starts the server.
 * Open a new terminal window and type `mysql -u root` to access the running server
 * root is the default user in mysql and can be changed
+
+## MySQL Connector
+Added to the repo is the library file needed to connect MySQL
+The jar file needs to be added to the project library
+The Folder "example sql connection" hold a java file that has an example connection
