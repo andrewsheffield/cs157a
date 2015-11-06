@@ -17,3 +17,7 @@ Main project
 Added to the repo is the library file needed to connect MySQL
 The jar file needs to be added to the project library
 The Folder "example sql connection" hold a java file that has an example connection
+
+## Use the CreateTables.sql file
+* Open a terminal and run the command `mysql -u root -p < CreateTables.sql`
+* Login to mysql with root `mysql -u root -p`
