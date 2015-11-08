@@ -132,6 +132,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`auth` (
 ENGINE = InnoDB;
 
 
+--Added a view for finding friends
+DROP VIEW IF EXISTS friendView;
+CREATE VIEW friendView AS
+SELECT friend.UserID, user.UserID AS FriendID, user.FirstName, user.LastName, user.Email FROM
+friend, user
+WHERE
+friendID = user.UserID
+ORDER BY user.LastName ASC, user.FirstName ASC;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
