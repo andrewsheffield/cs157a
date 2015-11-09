@@ -142,6 +142,27 @@ friendID = user.UserID
 ORDER BY user.LastName ASC, user.FirstName ASC;
 
 
+--Trigger that removes friends when a user is deleted
+DROP TRIGGER IF EXISTS deleteFriendTrigger;
+DELIMITER //
+CREATE TRIGGER deleteFriendTrigger
+BEFORE DELETE ON user FOR EACH ROW
+BEGIN
+DELETE FROM friend WHERE old.UserID = UserID;
+DELETE FROM friend WHERE old.UserID = FriendID;
+END //
+DELIMITER ;
+
+--Get all users stored procedure
+DROP PROCEDURE IF EXISTS getAllUsers;
+DELIMITER //
+CREATE PROCEDURE getAllUsers ()
+BEGIN
+  SELECT * FROM user;
+END //
+DELIMITER ;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
