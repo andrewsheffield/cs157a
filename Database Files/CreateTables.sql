@@ -27,8 +27,9 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`user` (
   `FirstName` VARCHAR(40) NULL,
   `LastName` VARCHAR(40) NULL,
   `Email` VARCHAR(100) NULL,
+  `isAdmin` TINYINT(1) NOT NULL,
   PRIMARY KEY (`UserID`) ,
-  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC));
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC));h
 
 
 -- -----------------------------------------------------
