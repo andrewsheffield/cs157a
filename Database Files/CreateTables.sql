@@ -8,142 +8,148 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema theaterpro
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema theaterpro
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `theaterpro` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `theaterpro` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`user`
+-- Table `theaterpro`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`user` ;
+DROP TABLE IF EXISTS `theaterpro`.`user` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`user` (
-  `UserID` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `FirstName` VARCHAR(40) NULL COMMENT '',
-  `LastName` VARCHAR(40) NULL COMMENT '',
-  `Email` VARCHAR(100) NULL COMMENT '',
-  PRIMARY KEY (`UserID`)  COMMENT '',
-  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC)  COMMENT '');
-
-
--- -----------------------------------------------------
--- Table `mydb`.`screen`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`screen` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`screen` (
-  `ScreenID` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `Size` INT NULL COMMENT '',
-  `IMAX` TINYINT(1) NULL COMMENT '',
-  `3D` TINYINT(1) NULL COMMENT '',
-  `XD` TINYINT(1) NULL COMMENT '',
-  `DBOX` TINYINT(1) NULL COMMENT '',
-  PRIMARY KEY (`ScreenID`)  COMMENT '',
-  UNIQUE INDEX `ScreenID_UNIQUE` (`ScreenID` ASC)  COMMENT '')
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `theaterpro`.`user` (
+  `UserID` INT NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(40) NULL,
+  `LastName` VARCHAR(40) NULL,
+  `Email` VARCHAR(100) NULL,
+  PRIMARY KEY (`UserID`) ,
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`friend`
+-- Table `theaterpro`.`screen`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`friend` ;
+DROP TABLE IF EXISTS `theaterpro`.`screen` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`friend` (
-  `UserID` INT NULL COMMENT '',
-  `FriendID` INT NULL COMMENT '',
-  INDEX `UserID_idx` (`UserID` ASC)  COMMENT '',
-  INDEX `FriendID_idx` (`FriendID` ASC)  COMMENT '',
+CREATE TABLE IF NOT EXISTS `theaterpro`.`screen` (
+  `ScreenID` INT NOT NULL AUTO_INCREMENT,
+  `Size` INT NULL,
+  `IMAX` TINYINT(1) NULL,
+  `3D` TINYINT(1) NULL,
+  `XD` TINYINT(1) NULL,
+  `DBOX` TINYINT(1) NULL,
+  PRIMARY KEY (`ScreenID`) ,
+  UNIQUE INDEX `ScreenID_UNIQUE` (`ScreenID` ASC))
+;
+
+
+-- -----------------------------------------------------
+-- Table `theaterpro`.`friend`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `theaterpro`.`friend` ;
+
+CREATE TABLE IF NOT EXISTS `theaterpro`.`friend` (
+  `UserID` INT NULL,
+  `FriendID` INT NULL,
+  INDEX `UserID_idx` (`UserID` ASC),
+  INDEX `FriendID_idx` (`FriendID` ASC),
   CONSTRAINT `UserID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `mydb`.`user` (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FriendID`
     FOREIGN KEY (`FriendID`)
-    REFERENCES `mydb`.`user` (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`showing`
+-- Table `theaterpro`.`showing`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`showing` ;
+DROP TABLE IF EXISTS `theaterpro`.`showing` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`showing` (
-  `ShowingID` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `ScreenID` INT NULL COMMENT '',
-  `imdbID` VARCHAR(45) NULL COMMENT '',
-  `Timestamp` DATETIME NULL COMMENT '',
-  PRIMARY KEY (`ShowingID`)  COMMENT '',
-  UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC)  COMMENT '',
-  INDEX `ScreenID_idx` (`ScreenID` ASC)  COMMENT '',
+CREATE TABLE IF NOT EXISTS `theaterpro`.`showing` (
+  `ShowingID` INT NOT NULL AUTO_INCREMENT,
+  `ScreenID` INT NULL,
+  `imdbID` VARCHAR(45) NULL,
+  `Timestamp` DATETIME NULL,
+  PRIMARY KEY (`ShowingID`) ,
+  UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
+  INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenID`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `mydb`.`screen` (`ScreenID`)
+    REFERENCES `theaterpro`.`screen` (`ScreenID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ticket`
+-- Table `theaterpro`.`ticket`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`ticket` ;
+DROP TABLE IF EXISTS `theaterpro`.`ticket` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`ticket` (
-  `UserID` INT NULL COMMENT '',
-  `ShowingID` INT NULL COMMENT '',
-  INDEX `UserID_idx` (`UserID` ASC)  COMMENT '',
-  INDEX `ShowingID_idx` (`ShowingID` ASC)  COMMENT '',
+CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
+  `UserID` INT NULL,
+  `ShowingID` INT NULL,
+  INDEX `UserID_idx` (`UserID` ASC) ,
+  INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `mydb`.`user` (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `ShowingID`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `mydb`.`showing` (`ShowingID`)
+    REFERENCES `theaterpro`.`showing` (`ShowingID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`auth`
+-- Table `theaterpro`.`auth`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`auth` ;
+DROP TABLE IF EXISTS `theaterpro`.`auth` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`auth` (
-  `UserID` INT NOT NULL COMMENT '',
-  `hPassword` VARCHAR(128) NULL COMMENT '',
-  INDEX `UserID_idx` (`UserID` ASC)  COMMENT '',
+CREATE TABLE IF NOT EXISTS `theaterpro`.`auth` (
+  `UserID` INT NOT NULL,
+  `hPassword` VARCHAR(128) NULL,
+  INDEX `UserID_idx` (`UserID` ASC) ,
   CONSTRAINT `AuthID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `mydb`.`user` (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
+-- -----------------------------------------------------
+-- View friendView
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `theaterpro`.`friendView`;
 
---Added a view for finding friends
-DROP VIEW IF EXISTS friendView;
 CREATE VIEW friendView AS
-SELECT friend.UserID, user.UserID AS FriendID, user.FirstName, user.LastName, user.Email FROM
-friend, user
-WHERE
-friendID = user.UserID
-ORDER BY user.LastName ASC, user.FirstName ASC;
+  SELECT friend.UserID, user.UserID AS FriendID, user.FirstName, user.LastName, user.Email FROM
+  friend, user
+  WHERE
+  friendID = user.UserID
+  ORDER BY user.LastName ASC, user.FirstName ASC
+;
 
 
---Trigger that removes friends when a user is deleted
+-- -----------------------------------------------------
+-- Trigger deleteFriendTrigger
+-- -----------------------------------------------------
 DROP TRIGGER IF EXISTS deleteFriendTrigger;
+
 DELIMITER //
 CREATE TRIGGER deleteFriendTrigger
 BEFORE DELETE ON user FOR EACH ROW
@@ -153,7 +159,9 @@ DELETE FROM friend WHERE old.UserID = FriendID;
 END //
 DELIMITER ;
 
---Get all users stored procedure
+-- -----------------------------------------------------
+-- Procedure getAllUsers()
+-- -----------------------------------------------------
 DROP PROCEDURE IF EXISTS getAllUsers;
 DELIMITER //
 CREATE PROCEDURE getAllUsers ()
