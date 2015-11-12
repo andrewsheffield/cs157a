@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS `theaterpro`.`screen` ;
 CREATE TABLE IF NOT EXISTS `theaterpro`.`screen` (
   `ScreenID` INT NOT NULL AUTO_INCREMENT,
   `Size` INT NULL,
-  `IMAX` TINYINT(1) NULL,
+  `IMAX` TINYINT(1)git  NULL,
   `3D` TINYINT(1) NULL,
   `XD` TINYINT(1) NULL,
   `DBOX` TINYINT(1) NULL,
@@ -61,14 +61,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`friend` (
   INDEX `FriendID_idx` (`FriendID` ASC),
   CONSTRAINT `UserID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `FriendID`
     FOREIGN KEY (`FriendID`)
-    REFERENCES `theaterpro`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `theaterpro`.`user` (`UserID`))
 ;
 
 
@@ -87,9 +83,25 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showing` (
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenID`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`screen` (`ScreenID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `theaterpro`.`screen` (`ScreenID`))
+;
+
+-- -----------------------------------------------------
+-- Table `theaterpro`.`showingarchive`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `theaterpro`.`showingarchive` ;
+
+CREATE TABLE IF NOT EXISTS `theaterpro`.`showingarchive` (
+  `ShowingID` INT NOT NULL AUTO_INCREMENT,
+  `ScreenID` INT NULL,
+  `imdbID` VARCHAR(45) NULL,
+  `Timestamp` DATETIME NULL,
+  PRIMARY KEY (`ShowingID`) ,
+  UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
+  INDEX `ScreenID_idx` (`ScreenID` ASC) ,
+  CONSTRAINT `ScreenID`
+    FOREIGN KEY (`ScreenID`)
+    REFERENCES `theaterpro`.`screen` (`ScreenID`))
 ;
 
 
@@ -105,14 +117,28 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `ShowingID`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showing` (`ShowingID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
+;
+
+-- -----------------------------------------------------
+-- Table `theaterpro`.`ticketarchive`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `theaterpro`.`ticketarchive` ;
+
+CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketarchive` (
+  `UserID` INT NULL,
+  `ShowingID` INT NULL,
+  INDEX `UserID_idx` (`UserID` ASC) ,
+  INDEX `ShowingID_idx` (`ShowingID` ASC) ,
+  CONSTRAINT `TicketHolderID`
+    FOREIGN KEY (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`),
+  CONSTRAINT `ShowingID`
+    FOREIGN KEY (`ShowingID`)
+    REFERENCES `theaterpro`.`showing` (`ShowingID`))
 ;
 
 
@@ -127,9 +153,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`auth` (
   INDEX `UserID_idx` (`UserID` ASC) ,
   CONSTRAINT `AuthID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `theaterpro`.`user` (`UserID`))
 ;
 
 -- -----------------------------------------------------

@@ -8,12 +8,12 @@ public class Controller {
     
     DataAccess dal = new DataAccess();
     
-    public boolean createUser(String fname, String lname, String email) {
+    public User createUser(String fname, String lname, String email) {
         try {
             return dal.createUser(fname, lname, email);
         } catch (SQLException ex) {
             System.out.println(ex);
-            return false;
+            return null;
         }
     }
     

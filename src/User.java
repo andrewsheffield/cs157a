@@ -5,19 +5,21 @@
  */
 public class User {
     
-    private final String fname;
-    private final String lname;
-    private final String email;
+    public final int   id;
+    public final String fname;
+    public final String lname;
+    public final String email;
 
-    public User(String fname, String lname, String email) {
+    public User(int id, String fname, String lname, String email) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
+        this.id = id;
     }
     
     @Override
     public String toString() {
-        return "{" + fname + ", " + lname + ", " + email + "}";
+        return "{"+ id + ", " + fname + ", " + lname + ", " + email + "}";
     }
     
 }

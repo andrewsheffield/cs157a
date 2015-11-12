@@ -8,28 +8,40 @@ import java.util.ArrayList;
 
 
 public class DataAccess {
+    
+    String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
 
-    public boolean createUser(String fname, String lname, String email) throws SQLException {
+    public User createUser(String fname, String lname, String email) throws SQLException {
     
         PreparedStatement pstmt = null;
         
+        String newUserQuery = "INSERT INTO user(FirstName, LastName, Email) Values (?, ?, ?)";
+        String getNewUserQuery = "SELECT * FROM user ORDER BY UserID DESC LIMIT 1";
+        
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mydb?" +
-                                   "user=root&password=");
-            pstmt = conn.prepareStatement("INSERT INTO user(FirstName, LastName, Email) Values (?, ?, ?)");
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(newUserQuery);
             pstmt.setString(1, fname);
             pstmt.setString(2, lname);
             pstmt.setString(3, email);
             
             pstmt.execute();
             
-            System.out.println("CREATE: User " + fname + " has been added to the db.");
             
-            return true;
+            pstmt = conn.prepareCall(getNewUserQuery);
+            ResultSet rs = pstmt.executeQuery();
+            
+            rs.next();
+            
+            User user = new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Email"));
+            
+            System.out.println("CREATE: User " + user.id + " has been added to the db.");
+            
+            return user;
         }
         catch(SQLException e) {
             System.out.println(e);
-            return false;
+            return null;
         }
         finally {
             pstmt.close();
@@ -43,8 +55,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mydb?" +
-                                   "user=root&password=");
+            Connection conn = DriverManager.getConnection(databaseURI);
             pstmt = conn.prepareStatement("SELECT * FROM user WHERE FirstName LIKE ? OR LastName LIKE ?");
             pstmt.setString(1, "%" + searchString + "%");
             pstmt.setString(2, "%" + searchString + "%");
@@ -52,11 +63,12 @@ public class DataAccess {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
+                int id = rs.getInt("UserID");
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
                 
-                User newUser = new User(fname, lname, email);
+                User newUser = new User(id, fname, lname, email);
                 arrayList.add(newUser);
             }
             
@@ -79,19 +91,19 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mydb?" +
-                                   "user=root&password=");
+            Connection conn = DriverManager.getConnection(databaseURI);
             pstmt = conn.prepareStatement("SELECT * FROM user WHERE Email LIKE ?");
             pstmt.setString(1, "%" + searchString + "%");
             
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
+                int id = rs.getInt("UserID");
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
                 
-                User newUser = new User(fname, lname, email);
+                User newUser = new User(id, fname, lname, email);
                 arrayList.add(newUser);
             }
             
@@ -114,8 +126,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mydb?" +
-                                   "user=root&password=");
+            Connection conn = DriverManager.getConnection(databaseURI);
             pstmt = conn.prepareStatement("SELECT * FROM user WHERE FirstName LIKE ? AND LastName LIKE ?");
             pstmt.setString(1, "%" + searchFirst + "%");
             pstmt.setString(2, "%" + searchLast + "%");
@@ -123,11 +134,12 @@ public class DataAccess {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
+                int id = rs.getInt("UserID");
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
                 
-                User newUser = new User(fname, lname, email);
+                User newUser = new User(id, fname, lname, email);
                 arrayList.add(newUser);
             }
             
@@ -148,8 +160,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mydb?" +
-                                   "user=root&password=");
+            Connection conn = DriverManager.getConnection(databaseURI);
             pstmt = conn.prepareStatement("INSERT INTO friend (UserID, FriendID) VALUES(?, ?)");
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);

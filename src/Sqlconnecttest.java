@@ -1,5 +1,6 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -14,14 +15,12 @@ public class Sqlconnecttest {
         
         Controller cont = new Controller();
         
-        //boolean result = cont.createUser("Andrew", "Sheffield", "andrewsheffield@cs157a.com");
+        //System.out.println(cont.createUser("Peter", "Pham", "pham@cs157a.com"));
         
-        //System.out.println(result);
-        
-        ArrayList al = cont.searchUsers("@cs157a.com");
+        ArrayList al = cont.searchUsers("and eff");
         System.out.println(al);
         
-        System.out.println(cont.addFriend(12, 3));
+        System.out.println(cont.addFriend(1, 2));
         
     }
     
