@@ -1,6 +1,8 @@
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -8,9 +10,9 @@ public class Controller {
     
     DataAccess dal = new DataAccess();
     
-    public User createUser(String fname, String lname, String email) {
+    public User createUser(String fname, String lname, String email, String password) {
         try {
-            return dal.createUser(fname, lname, email);
+            return dal.createUser(fname, lname, email, password);
         } catch (SQLException ex) {
             System.out.println(ex);
             return null;
@@ -54,6 +56,15 @@ public class Controller {
 
     boolean getFriendsForUser(int i) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    User login(String email, String password) {
+        try {
+            return dal.login(email, password);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     

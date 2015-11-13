@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`user` (
   `Email` VARCHAR(100) NULL,
   `isAdmin` TINYINT(1) NOT NULL,
   PRIMARY KEY (`UserID`) ,
-  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC));h
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC));
 
 
 -- -----------------------------------------------------
@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS `theaterpro`.`screen` ;
 CREATE TABLE IF NOT EXISTS `theaterpro`.`screen` (
   `ScreenID` INT NOT NULL AUTO_INCREMENT,
   `Size` INT NULL,
-  `IMAX` TINYINT(1)git  NULL,
+  `IMAX` TINYINT(1) NULL,
   `3D` TINYINT(1) NULL,
   `XD` TINYINT(1) NULL,
   `DBOX` TINYINT(1) NULL,
@@ -87,25 +87,6 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showing` (
 ;
 
 -- -----------------------------------------------------
--- Table `theaterpro`.`showingarchive`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `theaterpro`.`showingarchive` ;
-
-CREATE TABLE IF NOT EXISTS `theaterpro`.`showingarchive` (
-  `ShowingID` INT NOT NULL AUTO_INCREMENT,
-  `ScreenID` INT NULL,
-  `imdbID` VARCHAR(45) NULL,
-  `Timestamp` DATETIME NULL,
-  PRIMARY KEY (`ShowingID`) ,
-  UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
-  INDEX `ScreenID_idx` (`ScreenID` ASC) ,
-  CONSTRAINT `ScreenID`
-    FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`screen` (`ScreenID`))
-;
-
-
--- -----------------------------------------------------
 -- Table `theaterpro`.`ticket`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `theaterpro`.`ticket` ;
@@ -124,32 +105,13 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
 ;
 
 -- -----------------------------------------------------
--- Table `theaterpro`.`ticketarchive`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `theaterpro`.`ticketarchive` ;
-
-CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketarchive` (
-  `UserID` INT NULL,
-  `ShowingID` INT NULL,
-  INDEX `UserID_idx` (`UserID` ASC) ,
-  INDEX `ShowingID_idx` (`ShowingID` ASC) ,
-  CONSTRAINT `TicketHolderID`
-    FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`),
-  CONSTRAINT `ShowingID`
-    FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showing` (`ShowingID`))
-;
-
-
--- -----------------------------------------------------
 -- Table `theaterpro`.`auth`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `theaterpro`.`auth` ;
 
 CREATE TABLE IF NOT EXISTS `theaterpro`.`auth` (
   `UserID` INT NOT NULL,
-  `hPassword` VARCHAR(128) NULL,
+  `hPassword` INT NULL,
   INDEX `UserID_idx` (`UserID` ASC) ,
   CONSTRAINT `AuthID`
     FOREIGN KEY (`UserID`)

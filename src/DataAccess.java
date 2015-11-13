@@ -10,33 +10,38 @@ import java.util.ArrayList;
 public class DataAccess {
     
     String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
+    String salt = "SaltySalt";
 
-    public User createUser(String fname, String lname, String email) throws SQLException {
+    //sign up a new user
+    public User createUser(String fname, String lname, String email, String password) throws SQLException {
     
         PreparedStatement pstmt = null;
         
-        String newUserQuery = "INSERT INTO user(FirstName, LastName, Email) Values (?, ?, ?)";
-        String getNewUserQuery = "SELECT * FROM user ORDER BY UserID DESC LIMIT 1";
+        String newUserQuery = "INSERT INTO user(FirstName, LastName, Email, isAdmin) Values (?, ?, ?, ?)";
+        String newAuthQuery = "INSERT INTO auth(UserID, hPassword) VALUES (?, ?)";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
-            pstmt = conn.prepareStatement(newUserQuery);
+            
+            //Create new user
+            pstmt = conn.prepareStatement(newUserQuery, PreparedStatement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, fname);
             pstmt.setString(2, lname);
             pstmt.setString(3, email);
+            pstmt.setBoolean(4, false);
+            pstmt.execute();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            User user = new User(rs.getInt(1), fname, lname, email);
             
+            //Add auth for new User
+            int hPassword = (password+salt).hashCode();
+            pstmt = conn.prepareStatement(newAuthQuery);
+            pstmt.setInt(1, user.id);
+            pstmt.setInt(2, hPassword);
             pstmt.execute();
             
-            
-            pstmt = conn.prepareCall(getNewUserQuery);
-            ResultSet rs = pstmt.executeQuery();
-            
-            rs.next();
-            
-            User user = new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Email"));
-            
-            System.out.println("CREATE: User " + user.id + " has been added to the db.");
-            
+            //Return the user that was created
             return user;
         }
         catch(SQLException e) {
@@ -47,6 +52,46 @@ public class DataAccess {
             pstmt.close();
         }
         
+    }
+    
+    //login a user
+    public User login(String email, String password) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String userQuery = "SELECT * FROM user WHERE Email=?";
+        String authQuery = "SELECT * FROM auth WHERE UserID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            //Get the User we are attempting to authenticate
+            pstmt = conn.prepareStatement(userQuery);
+            pstmt.setString(1, email);
+            ResultSet urs = pstmt.executeQuery();
+            if (urs.next()) {
+                User user = new User(urs.getInt("UserID"), urs.getString("FirstName"), urs.getString("LastName"), urs.getString("Email"));
+                
+                //get Auth values
+                int hPassword = (password+salt).hashCode();
+                pstmt = conn.prepareStatement(authQuery);
+                pstmt.setInt(1, user.id);
+                ResultSet ars = pstmt.executeQuery();
+                ars.next();
+                int dbhPassword = ars.getInt("hPassword");
+
+                if (dbhPassword == hPassword) return user;
+                else return null;
+            }
+            
+            return null;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
     }
     
     public ArrayList searchUsersOneName(String searchString) throws SQLException {
