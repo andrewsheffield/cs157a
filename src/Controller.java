@@ -66,6 +66,10 @@ public class Controller {
             return null;
         }
     }
+
+    Screen createScreen(String name, int size, String imax, String threeD, String dbox, String xd) {
+        return dal.createScreen(name, size, imax, threeD, dbox, xd);
+    }
     
     
 }

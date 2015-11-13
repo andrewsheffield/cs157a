@@ -44,8 +44,9 @@ public class Sqlconnecttest {
                     startApp();
                     break;
             }
-        } else {
-            System.out.println("1:Search Users\t2:Add Friend\t3:Search Movies");
+        } 
+        else if (!currentUser.isAdmin) {
+            System.out.println("1:Search Users\t2:Add Friend\t3:Buy Ticket(s)");
             int choice = scan.nextInt();
             switch (choice) {
                 case 1: 
@@ -55,10 +56,29 @@ public class Sqlconnecttest {
                     addNewFriend();
                     break;
                 case 3:
-                    searchMovies();
+                    buyTickets();
                     break;
                 default:
                     System.out.println("Invalid selection, try again.");
+                    startApp();
+                    break;
+            }
+        } 
+        else {
+            System.out.println("1:Edit Screens\t2:Edit Showings\t3:Edit Admins");
+            int choice = scan.nextInt();
+            switch (choice) {
+                case 1:
+                    editScreens();
+                    break;
+                case 2:
+                    editShowings();
+                    break;
+                case 3:
+                    editAdmins();
+                    break;
+                default:
+                    System.out.println("Incorrect choice.");
                     startApp();
                     break;
             }
@@ -119,14 +139,15 @@ public class Sqlconnecttest {
         startApp();
     }
 
-    private static void searchMovies() {
+    private static void searchMovieDB() {
         Scanner scan = new Scanner(System.in);
         System.out.print("Search Movie by Name: ");
-        String movieName = scan.next();
+        String movieName = scan.nextLine();
+        movieName = movieName.replaceAll(" ", "+");
         
         URL imdb;
         try {
-            imdb = new URL("http://www.omdbapi.com/?t=Frozen&y=&plot=short&r=json");
+            imdb = new URL("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&r=json");
             URLConnection yc = imdb.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
             String inputLine;
@@ -134,8 +155,10 @@ public class Sqlconnecttest {
             while ((inputLine = in.readLine()) != null) {
                 Object obj = JSONValue.parse(inputLine);
                 JSONObject json = (JSONObject) obj;
+                System.out.println(json.get("Title"));
                 System.out.println(json.get("imdbID"));
-                System.out.println(json.get("Metascore"));
+                System.out.println(json.get("Released"));
+                System.out.println(json.get("Plot"));
             }
             in.close();
         } catch (MalformedURLException ex) {
@@ -144,7 +167,83 @@ public class Sqlconnecttest {
             Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        System.out.println("1.Menu\t2.Search More");
+        
+        switch (scan.nextInt()) {
+            case 1:
+                startApp();
+                break;
+            case 2:
+                searchMovieDB();
+                break;
+            default:
+                System.out.println("Incorrect Selection");
+                startApp();
+                break;
+        }
+        
     
+    }
+
+    private static void buyTickets() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void editScreens() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("1:Create Screen\t2:Shows Screens\t3:Delete Screen");
+        int choice = scan.nextInt();
+        switch (choice) {
+            case 1:
+                createScreen();
+                break;
+            case 2:
+                showsScreens();
+                break;
+            case 3:
+                deleteScreen();
+                break;
+            default:
+                System.out.println("Incorrect choice.");
+                editScreens();
+                break;
+        }
+    }
+
+    private static void editShowings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void editAdmins() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void createScreen() {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Screen name: ");
+        String name = scan.nextLine();
+        System.out.print("Screen size: ");
+        int size = scan.nextInt();
+        System.out.print("Is IMAX?(y,n): ");
+        String imax = scan.next();
+        System.out.print("Is 3D?(y,n): ");
+        String threeD = scan.next();
+        System.out.print("Is DBOX?(y,n): ");
+        String dbox = scan.next();
+        System.out.print("Is XD?(y,n): ");
+        String xd = scan.next();
+        
+        System.out.println(cont.createScreen(name, size, imax, threeD, dbox, xd));
+        editScreens();
+        
+    }
+
+    private static void showsScreens() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void deleteScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

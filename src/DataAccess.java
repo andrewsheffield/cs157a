@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class DataAccess {
     
-    String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
-    String salt = "SaltySalt";
+    private String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
+    private String salt = "SaltySalt";
 
     //sign up a new user
     public User createUser(String fname, String lname, String email, String password) throws SQLException {
@@ -32,7 +32,7 @@ public class DataAccess {
             pstmt.execute();
             ResultSet rs = pstmt.getGeneratedKeys();
             rs.next();
-            User user = new User(rs.getInt(1), fname, lname, email);
+            User user = new User(rs.getInt(1), fname, lname, email, false);
             
             //Add auth for new User
             int hPassword = (password+salt).hashCode();
@@ -69,7 +69,7 @@ public class DataAccess {
             pstmt.setString(1, email);
             ResultSet urs = pstmt.executeQuery();
             if (urs.next()) {
-                User user = new User(urs.getInt("UserID"), urs.getString("FirstName"), urs.getString("LastName"), urs.getString("Email"));
+                User user = new User(urs.getInt("UserID"), urs.getString("FirstName"), urs.getString("LastName"), urs.getString("Email"), urs.getBoolean("isAdmin"));
                 
                 //get Auth values
                 int hPassword = (password+salt).hashCode();
@@ -112,8 +112,9 @@ public class DataAccess {
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
+                boolean isAdmin = rs.getBoolean("isAdmin");
                 
-                User newUser = new User(id, fname, lname, email);
+                User newUser = new User(id, fname, lname, email, isAdmin);
                 arrayList.add(newUser);
             }
             
@@ -147,8 +148,9 @@ public class DataAccess {
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
+                boolean isAdmin = rs.getBoolean("isAdmin");
                 
-                User newUser = new User(id, fname, lname, email);
+                User newUser = new User(id, fname, lname, email, isAdmin);
                 arrayList.add(newUser);
             }
             
@@ -183,8 +185,9 @@ public class DataAccess {
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
+                boolean isAdmin = rs.getBoolean("isAdmin");
                 
-                User newUser = new User(id, fname, lname, email);
+                User newUser = new User(id, fname, lname, email, isAdmin);
                 arrayList.add(newUser);
             }
             
