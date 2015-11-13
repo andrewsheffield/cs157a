@@ -249,6 +249,37 @@ public class DataAccess {
             pstmt.close();
         }
     }
+    
+  //Buy multiple tickets
+    public boolean purchaseMultipleTickets(int userID, int showingID, int amount) throws SQLException {
+
+        PreparedStatement pstmt = null;
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            String valueAmount = "INSERT INTO ticket(UserID, ShowingID) Values (?, ?)";
+            for (int i = 1; i < amount; i++) {
+            	valueAmount += ", (?, ?)";
+            }
+            
+            pstmt = conn.prepareStatement(valueAmount);
+            for (int i = 1; i < amount*2; i++) {
+            	pstmt.setInt(i, userID);
+            	pstmt.setInt(i+1, showingID);
+            }
+
+            pstmt.execute();
+            return true;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+    
     //Cancel purchase
     public boolean cancelTicket(int userID, int showingID) throws SQLException {
 
