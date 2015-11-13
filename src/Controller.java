@@ -71,5 +71,38 @@ public class Controller {
         return dal.createScreen(name, size, imax, threeD, dbox, xd);
     }
     
+    public boolean purchaseTicket(int userID, int showingID) {
+
+        try {
+            return dal.purchaseTicket(userID, showingID);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    public boolean purchaseMultipleTickets(int userID, int showingID, int amount) {
+
+        try {
+            return dal.purchaseMultipleTickets(userID, showingID, amount);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean cancelTicket(int userID, int showingID) {
+
+        try {
+            return dal.cancelTicket(userID, showingID);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
     
 }

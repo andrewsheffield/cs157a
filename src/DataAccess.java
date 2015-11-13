@@ -227,4 +227,88 @@ public class DataAccess {
         }
     }
     
+  //Buy tickets
+    public boolean purchaseTicket(int userID, int showingID) throws SQLException {
+
+        PreparedStatement pstmt = null;
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement("INSERT INTO ticket(UserID, ShowingID) Values (?, ?)");
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, showingID);
+
+            pstmt.execute();
+
+            System.out.println("CREATE: User " + userID + " has purchased showing " + showingID);
+
+            return true;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+    
+  //Buy multiple tickets
+    public boolean purchaseMultipleTickets(int userID, int showingID, int amount) throws SQLException {
+
+        PreparedStatement pstmt = null;
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            String valueAmount = "INSERT INTO ticket(UserID, ShowingID) Values (?, ?)";
+            for (int i = 1; i < amount; i++) {
+            	valueAmount += ", (?, ?)";
+            }
+            
+            pstmt = conn.prepareStatement(valueAmount);
+            for (int i = 1; i < amount*2; i++) {
+            	pstmt.setInt(i, userID);
+            	pstmt.setInt(i+1, showingID);
+            }
+
+            pstmt.execute();
+            return true;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+    
+    //Cancel purchase
+    public boolean cancelTicket(int userID, int showingID) throws SQLException {
+
+        PreparedStatement pstmt = null;
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement("DELETE FROM ticket WHERE userID = ? and showingID = ?");
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, showingID);
+
+            pstmt.execute();
+
+            System.out.println("DELETE: User " + userID + " has cancelled showing " + showingID);
+
+            return true;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+    
+    
+    
 }
