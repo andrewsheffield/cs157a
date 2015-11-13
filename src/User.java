@@ -21,7 +21,7 @@ public class User {
     
     @Override
     public String toString() {
-        return "{"+ id + ", " + fname + ", " + lname + ", " + email + ", " + isAdmin + "}";
+        return "{ID:"+ id + ", " + fname + ", " + lname + ", " + email + ", Admin:" + isAdmin + "}";
     }
     
 }

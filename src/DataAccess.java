@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class DataAccess {
     
-    private String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
-    private String salt = "SaltySalt";
+    private final String databaseURI = "jdbc:mysql://localhost/theaterpro?user=root&password=";
+    private final String salt = "SaltySalt";
 
     //sign up a new user
     public User createUser(String fname, String lname, String email, String password) throws SQLException {
@@ -301,6 +301,143 @@ public class DataAccess {
             return true;
         }
         catch(SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    
+    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String newScreenQuery = "INSERT INTO screen(Name, Size, IMAX, 3D, DBOX, XD) Values (?, ?, ?, ?, ?, ?)";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            //Create new user
+            pstmt = conn.prepareStatement(newScreenQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, name);
+            pstmt.setInt(2, size);
+            pstmt.setBoolean(3, imax);
+            pstmt.setBoolean(4, threeD);
+            pstmt.setBoolean(5, dbox);
+            pstmt.setBoolean(6, xd);
+            pstmt.execute();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            Screen screen = new Screen(rs.getInt(1), name, size, imax, threeD, dbox, xd);
+            
+            //Return the user that was created
+            return screen;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    ArrayList getAllScreens() throws SQLException {
+        ArrayList arrayList = new ArrayList();
+        
+        PreparedStatement pstmt = null;
+        String getScreensQuery = "SELECT * FROM screen";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getScreensQuery);
+
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int id = rs.getInt("ScreenID");
+                String name = rs.getString("name");
+                int size = rs.getInt("size");
+                boolean imax = rs.getBoolean("IMAX");
+                boolean threeD = rs.getBoolean("3D");
+                boolean dbox = rs.getBoolean("DBOX");
+                boolean xd = rs.getBoolean("XD");
+                
+                Screen screen = new Screen(id, name, size, imax, threeD, dbox, xd);
+                arrayList.add(screen);
+            }
+            
+            return arrayList;
+            
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    boolean deleteScreen(int id) throws SQLException {
+        PreparedStatement pstmt = null;
+        String deleteScreenQuery = "DELETE FROM screen WHERE ScreenID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(deleteScreenQuery);
+            pstmt.setInt(1, id);
+            pstmt.execute();
+            
+            return true;
+            
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    boolean grantAdminAccess(int id) throws SQLException {
+        PreparedStatement pstmt = null;
+        String grantAdminQuery = "UPDATE user SET isAdmin=1 WHERE UserID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(grantAdminQuery);
+            pstmt.setInt(1, id);
+            pstmt.execute();
+            
+            return true;
+            
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    boolean removeAdminAccess(int id) throws SQLException {
+        PreparedStatement pstmt = null;
+        String grantAdminQuery = "UPDATE user SET isAdmin=0 WHERE UserID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(grantAdminQuery);
+            pstmt.setInt(1, id);
+            pstmt.execute();
+            
+            return true;
+            
+        }
+        catch (SQLException e) {
             System.out.println(e);
             return false;
         }

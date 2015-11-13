@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS `theaterpro`.`screen` ;
 
 CREATE TABLE IF NOT EXISTS `theaterpro`.`screen` (
   `ScreenID` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(40) NULL,
   `Size` INT NULL,
   `IMAX` TINYINT(1) NULL,
   `3D` TINYINT(1) NULL,

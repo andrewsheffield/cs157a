@@ -215,9 +215,29 @@ public class Sqlconnecttest {
     }
 
     private static void editAdmins() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scan = new Scanner(System.in);
+        System.out.println("1:Search Users\t2:Add Admin Access\t3:Remove Admin Access");
+        int choice = scan.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.print("Search string: ");
+                String searchString = scan.next();
+                System.out.println(cont.searchUsers(searchString));
+                editAdmins();
+                break;
+            case 2:
+                grantAdminAccess();
+                break;
+            case 3:
+                removeAdminAccess();
+                break;
+            default:
+                System.out.println("Incorrect choice.");
+                editAdmins();
+                break;
+        }
     }
-
+    
     private static void createScreen() {
         Scanner scan = new Scanner(System.in);
         System.out.print("Screen name: ");
@@ -233,17 +253,41 @@ public class Sqlconnecttest {
         System.out.print("Is XD?(y,n): ");
         String xd = scan.next();
         
-        System.out.println(cont.createScreen(name, size, imax, threeD, dbox, xd));
+        System.out.println(cont.createScreen(name, size, (imax.equals("y")), (threeD.equals("y")), (dbox.equals("y")), (xd.equals("y"))));
         editScreens();
         
     }
 
     private static void showsScreens() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Screen> screenList = cont.getAllScreens();
+        screenList.stream().forEach((s) -> {
+            System.out.println(s);
+        });
+        editScreens();
     }
 
     private static void deleteScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Enter the ID to be deleted: ");
+        int id = scan.nextInt();
+        if (cont.deleteScreen(id)) System.out.println("Screen has been removed.");
+        editScreens();
+    }
+
+    private static void grantAdminAccess() {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("ID to give Admin access: ");
+        int id = scan.nextInt();
+        if (cont.grantAdminAccess(id)) System.out.println("Access has been granted.");
+        editAdmins();
+    }
+
+    private static void removeAdminAccess() {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("ID to remove Admin access: ");
+        int id = scan.nextInt();
+        if (cont.removeAdminAccess(id)) System.out.println("Access has been removed.");
+        editAdmins();
     }
 
 }

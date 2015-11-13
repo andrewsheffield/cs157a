@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class Controller {
     
-    DataAccess dal = new DataAccess();
+    private DataAccess dal = new DataAccess();
     
     public User createUser(String fname, String lname, String email, String password) {
         try {
@@ -67,8 +67,13 @@ public class Controller {
         }
     }
 
-    Screen createScreen(String name, int size, String imax, String threeD, String dbox, String xd) {
-        return dal.createScreen(name, size, imax, threeD, dbox, xd);
+    Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
+        try {
+            return dal.createScreen(name, size, imax, threeD, dbox, xd);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     public boolean purchaseTicket(int userID, int showingID) {
@@ -100,6 +105,42 @@ public class Controller {
         }
         catch (SQLException e) {
             System.out.println(e);
+            return false;
+        }
+    }
+
+    ArrayList getAllScreens() {
+        try {
+            return dal.getAllScreens();
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    boolean deleteScreen(int id) {
+        try {
+            return dal.deleteScreen(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    boolean grantAdminAccess(int id) {
+        try {
+            return dal.grantAdminAccess(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    boolean removeAdminAccess(int id) {
+        try {
+            return dal.removeAdminAccess(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
