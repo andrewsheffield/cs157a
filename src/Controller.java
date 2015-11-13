@@ -67,5 +67,27 @@ public class Controller {
         }
     }
     
+    public boolean purchaseTicket(int userID, int showingID) {
+
+        try {
+            return dal.purchaseTicket(userID, showingID);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean cancelTicket(int userID, int showingID) {
+
+        try {
+            return dal.cancelTicket(userID, showingID);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
     
 }
