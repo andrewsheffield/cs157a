@@ -58,26 +58,21 @@ public class DataAccess {
     public User login(String email, String password) throws SQLException {
         PreparedStatement pstmt = null;
         
-        String userQuery = "SELECT * FROM user WHERE Email=?";
-        String authQuery = "SELECT * FROM auth WHERE UserID=?";
+        String authQuery = "SELECT * FROM user,auth WHERE Email=? AND user.UserID=auth.UserID;";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
             
             //Get the User we are attempting to authenticate
-            pstmt = conn.prepareStatement(userQuery);
+            pstmt = conn.prepareStatement(authQuery);
             pstmt.setString(1, email);
-            ResultSet urs = pstmt.executeQuery();
-            if (urs.next()) {
-                User user = new User(urs.getInt("UserID"), urs.getString("FirstName"), urs.getString("LastName"), urs.getString("Email"), urs.getBoolean("isAdmin"));
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                User user = new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Email"), rs.getBoolean("isAdmin"));
                 
                 //get Auth values
                 int hPassword = (password+salt).hashCode();
-                pstmt = conn.prepareStatement(authQuery);
-                pstmt.setInt(1, user.id);
-                ResultSet ars = pstmt.executeQuery();
-                ars.next();
-                int dbhPassword = ars.getInt("hPassword");
+                int dbhPassword = rs.getInt("hPassword");
 
                 if (dbhPassword == hPassword) return user;
                 else return null;
