@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
@@ -305,7 +306,7 @@ public class DataAccess {
     }
 
     
-    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
+    Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
         PreparedStatement pstmt = null;
         
         String newScreenQuery = "INSERT INTO screen(Name, Size, IMAX, 3D, DBOX, XD) Values (?, ?, ?, ?, ?, ?)";
@@ -439,6 +440,74 @@ public class DataAccess {
         finally {
             pstmt.close();
         }
+    }
+
+    Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String newShowingQuery = "INSERT INTO showing(ScreenID, imdbID, Timestamp) VALUES (?, ?, ?)";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            //Create new user
+            pstmt = conn.prepareStatement(newShowingQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, screenID);
+            pstmt.setString(2, imdbID);
+            pstmt.setTimestamp(3, timestamp);
+            pstmt.execute();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            Showing showing = new Showing(rs.getInt(1), screenID, imdbID, timestamp);
+            
+            //Return the user that was created
+            return showing;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    ArrayList<Showing> getUpcomingShows(Timestamp currentTimestamp) throws SQLException {
+        PreparedStatement pstmt = null;
+        ArrayList<Showing> upcomingShows = new ArrayList();
+        
+        String getShowingQuery = "SELECT * FROM showing WHERE Timestamp>=? ORDER BY Timestamp ASC";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            //Create new user
+            pstmt = conn.prepareStatement(getShowingQuery);
+            pstmt.setTimestamp(1, currentTimestamp);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int showingID = rs.getInt("ShowingID");
+                int screenID = rs.getInt("ScreenID");
+                String imdbID = rs.getString("imdbID");
+                Timestamp timestamp = rs.getTimestamp("Timestamp");
+                
+                Showing showing = new Showing(showingID, screenID, imdbID, timestamp);
+                upcomingShows.add(showing);
+            }
+            
+            
+            //Return the user that was created
+            return upcomingShows;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    
     }
     
     

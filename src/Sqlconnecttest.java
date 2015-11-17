@@ -4,7 +4,12 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +24,8 @@ public class Sqlconnecttest {
 
     static Controller cont = new Controller();
     static User currentUser = null;
+    private static Movie movieSearchResult;
+    
     /**
      * @param args the command line arguments
      */
@@ -28,61 +35,62 @@ public class Sqlconnecttest {
     
     private static void startApp() {
         Scanner scan = new Scanner(System.in);
-        
-        if (currentUser == null) {
+            editShowings();
+            /*
+            if (currentUser == null) {
             System.out.println("1:Create User\t2:Login");
             int choice = scan.nextInt();
             switch (choice) {
-                case 1: 
-                    createUser();
-                    break;
-                case 2:
-                    login();
-                    break;
-                default:
-                    System.out.println("Invalid selection, try again.");
-                    startApp();
-                    break;
+            case 1:
+            createUser();
+            break;
+            case 2:
+            login();
+            break;
+            default:
+            System.out.println("Invalid selection, try again.");
+            startApp();
+            break;
             }
-        } 
-        else if (!currentUser.isAdmin) {
+            }
+            else if (!currentUser.isAdmin) {
             System.out.println("1:Search Users\t2:Add Friend\t3:Buy Ticket(s)");
             int choice = scan.nextInt();
             switch (choice) {
-                case 1: 
-                    searchUsers();
-                    break;
-                case 2:
-                    addNewFriend();
-                    break;
-                case 3:
-                    buyTickets();
-                    break;
-                default:
-                    System.out.println("Invalid selection, try again.");
-                    startApp();
-                    break;
+            case 1:
+            searchUsers();
+            break;
+            case 2:
+            addNewFriend();
+            break;
+            case 3:
+            buyTickets();
+            break;
+            default:
+            System.out.println("Invalid selection, try again.");
+            startApp();
+            break;
             }
-        } 
-        else {
+            }
+            else {
             System.out.println("1:Edit Screens\t2:Edit Showings\t3:Edit Admins");
             int choice = scan.nextInt();
             switch (choice) {
-                case 1:
-                    editScreens();
-                    break;
-                case 2:
-                    editShowings();
-                    break;
-                case 3:
-                    editAdmins();
-                    break;
-                default:
-                    System.out.println("Incorrect choice.");
-                    startApp();
-                    break;
+            case 1:
+            editScreens();
+            break;
+            case 2:
+            editShowings();
+            break;
+            case 3:
+            editAdmins();
+            break;
+            default:
+            System.out.println("Incorrect choice.");
+            startApp();
+            break;
             }
-        }
+            }*/
     }    
 
     private static void createUser() {
@@ -139,7 +147,7 @@ public class Sqlconnecttest {
         startApp();
     }
 
-    private static void searchMovieDB() {
+    private static void searchMovieByName() {
         Scanner scan = new Scanner(System.in);
         System.out.print("Search Movie by Name: ");
         String movieName = scan.nextLine();
@@ -155,31 +163,19 @@ public class Sqlconnecttest {
             while ((inputLine = in.readLine()) != null) {
                 Object obj = JSONValue.parse(inputLine);
                 JSONObject json = (JSONObject) obj;
-                System.out.println(json.get("Title"));
-                System.out.println(json.get("imdbID"));
-                System.out.println(json.get("Released"));
-                System.out.println(json.get("Plot"));
+                
+                String title = json.get("Title").toString();
+                String imdbID = json.get("imdbID").toString();
+                String plot = json.get("Plot").toString();
+                
+                Movie movie = new Movie(title, imdbID, plot);
+                movieSearchResult = movie;
             }
             in.close();
         } catch (MalformedURLException ex) {
             Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        System.out.println("1.Menu\t2.Search More");
-        
-        switch (scan.nextInt()) {
-            case 1:
-                startApp();
-                break;
-            case 2:
-                searchMovieDB();
-                break;
-            default:
-                System.out.println("Incorrect Selection");
-                startApp();
-                break;
         }
         
     
@@ -211,7 +207,30 @@ public class Sqlconnecttest {
     }
 
     private static void editShowings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scan = new Scanner(System.in);
+        System.out.println("1:Create Showing\t2:Show Upcoming Shows\t3:Remove Showing");
+        int choice = scan.nextInt();
+        switch (choice) {
+            case 1:
+                {
+                    try {
+                        createNewShowing();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+            case 2:
+                getUpcomingShows();
+                break;
+            case 3:
+                removeShowing();
+                break;
+            default:
+                System.out.println("Not a valid selection");
+                startApp();
+                break;
+        }
     }
 
     private static void editAdmins() {
@@ -288,6 +307,46 @@ public class Sqlconnecttest {
         int id = scan.nextInt();
         if (cont.removeAdminAccess(id)) System.out.println("Access has been removed.");
         editAdmins();
+    }
+
+    private static void createNewShowing() throws ParseException {
+        Scanner scan = new Scanner(System.in);
+        searchMovieByName();
+        System.out.println(movieSearchResult);
+        System.out.println("Use this movie(1) or search again(2)?");
+        
+        switch (scan.nextInt()) {
+            case 1:
+                System.out.print("ScreenID to use: ");
+                int screenID = scan.nextInt();
+                System.out.print("Date of Showing(yyyy-mm-dd): ");
+                String date = scan.next();
+                System.out.print("Time of Showing 24 hour(hh:mm): ");
+                String time = scan.next();
+                Timestamp timestamp = Timestamp.valueOf(date + " " + time + ":00.0");
+                System.out.println(cont.createNewShowing(screenID, movieSearchResult.imdbID, timestamp));
+                startApp();
+                break;
+            case 2:
+                createNewShowing();
+                break;
+            default:
+                System.out.println("Incorrect Selection");
+                startApp();
+                break;
+        }
+    
+    }
+
+    private static void getUpcomingShows() {
+        ArrayList<Showing> al = cont.getUpcomingShows();
+        al.stream().forEach((s) -> {
+            System.out.println(s);
+        });
+    }
+
+    private static void removeShowing() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

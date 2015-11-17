@@ -1,6 +1,8 @@
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -142,6 +144,27 @@ public class Controller {
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        }
+    }
+
+    Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
+        try {
+            return dal.createNewShowing(screenID, imdbID, timestamp);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    //Get shows past current time and date
+    ArrayList<Showing> getUpcomingShows() {
+        try {
+            Date date = new Date();
+            Timestamp currentTimestamp = new Timestamp(date.getTime());
+            return dal.getUpcomingShows(currentTimestamp);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
     
