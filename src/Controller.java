@@ -160,18 +160,41 @@ public class Controller {
     }
     
     /** NEEDS EMPLIMENTATION
-     *
+     * Updates the user information.  Place null in any field that will not be
+     * updated.
      * @param fname
      * @param lname
      * @param email
-     * @return
+     * @return the User after it has been updated
      */
     public User updateUserInfo(String fname, String lname, String email) {
         return null;
     }
     
-    //Search should check firstname || last name || both || email
-    public ArrayList searchUsers(String searchString) {
+    /**
+     * Takes the userid and the friendid and adds the friend to the users friend
+     * list.
+     * @param userID
+     * @param friendID
+     * @return boolean if operation is successful
+     */
+    public boolean addFriend(int userID, int friendID) {
+        try {
+            return dal.addFriend(userID, friendID);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;  
+        }
+    }
+    
+    /**
+     * Searches for users in the user databse by a searchstring.  The search string
+     * can contain any substring of first name, last name, first last name, or email.
+     * @param searchString
+     * @return arraylist of users matching the search string
+     */
+    public ArrayList<User> searchUsers(String searchString) {
         try {
             searchString = searchString.trim();
             
@@ -194,49 +217,34 @@ public class Controller {
         }
     }
     
-    public boolean addFriend(int userID, int friendID) {
-        
-        try {
-            return dal.addFriend(userID, friendID);
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-            return false;  
-        }
-    }
-
-    boolean getFriendsForUser(int i) {
+    /** NEEDS IMPLEMENTATION
+     * Gets all the friends associated with the userid.
+     * @param userID
+     * @return an ArrayList of Users
+     */
+    public ArrayList<User> getFriendsForUser(int userID) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
-        try {
-            return dal.createScreen(name, size, imax, threeD, dbox, xd);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-   
-
-    public ArrayList getAllScreens() {
-        try {
-            return dal.getAllScreens();
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    
+    /** NEEDS IMPLEMENATION
+     * Takes a user id and friend id and removes the friend from the friend list.
+     * @param userID
+     * @param friendID
+     * @return boolean true if operation is successful
+     */
+    public boolean removeAFriend(int userID, int friendID) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public boolean deleteScreen(int id) {
-        try {
-            return dal.deleteScreen(id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
+    
+    //#################ALL ADMIN FUNCTIONS###################################
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    
     public boolean grantAdminAccess(int id) {
         try {
             return dal.grantAdminAccess(id);
@@ -246,6 +254,11 @@ public class Controller {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public boolean removeAdminAccess(int id) {
         try {
             return dal.removeAdminAccess(id);
@@ -254,7 +267,14 @@ public class Controller {
             return false;
         }
     }
-
+    
+    /**
+     *
+     * @param screenID
+     * @param imdbID
+     * @param timestamp
+     * @return
+     */
     public Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
         try {
             return dal.createNewShowing(screenID, imdbID, timestamp);
@@ -264,8 +284,11 @@ public class Controller {
         }
     }
 
-    //Get shows past current time and date
-    ArrayList<Showing> getUpcomingShows() {
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Showing> getUpcomingShows() {
         try {
             Date date = new Date();
             Timestamp currentTimestamp = new Timestamp(date.getTime());
@@ -276,5 +299,62 @@ public class Controller {
         }
     }
     
+    /**
+     *
+     * @param showingID
+     * @return
+     */
+    public boolean removeShowing(int showingID) {
+        throw new UnsupportedOperationException("Not yet impementaed");
+    }
+    
+    /**
+     *
+     * @param name
+     * @param size
+     * @param imax
+     * @param threeD
+     * @param dbox
+     * @param xd
+     * @return
+     */
+    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
+        try {
+            return dal.createScreen(name, size, imax, threeD, dbox, xd);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList getAllScreens() {
+        try {
+            return dal.getAllScreens();
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public boolean deleteScreen(int id) {
+        try {
+            return dal.deleteScreen(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    
+
     
 }
