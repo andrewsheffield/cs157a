@@ -420,7 +420,7 @@ public class DataAccess {
     Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) throws SQLException {
         PreparedStatement pstmt = null;
         
-        String newShowingQuery = "INSERT INTO showing(ScreenID, imdbID, Timestamp) VALUES (?, ?, ?)";
+        String newShowingQuery = "INSERT INTO showing(ScreenID, imdbID, startTimestamp) VALUES (?, ?, ?)";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
@@ -451,7 +451,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         ArrayList<Showing> upcomingShows = new ArrayList();
         
-        String getShowingQuery = "SELECT * FROM showing WHERE Timestamp>=? ORDER BY Timestamp ASC";
+        String getShowingQuery = "SELECT * FROM showing WHERE startTimestamp>=? ORDER BY startTimestamp ASC";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
@@ -465,7 +465,7 @@ public class DataAccess {
                 int showingID = rs.getInt("ShowingID");
                 int screenID = rs.getInt("ScreenID");
                 String imdbID = rs.getString("imdbID");
-                Timestamp timestamp = rs.getTimestamp("Timestamp");
+                Timestamp timestamp = rs.getTimestamp("startTimestamp");
                 
                 Showing showing = new Showing(showingID, screenID, imdbID, timestamp);
                 upcomingShows.add(showing);
@@ -483,6 +483,10 @@ public class DataAccess {
             pstmt.close();
         }
     
+    }
+
+    void removeShowing(int showingID) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

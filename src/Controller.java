@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class Controller {
     
     //Controller has exclusive access to the data access layer.
-    private final Model model = new Model();
+    final Model model = new Model();
     
     /** NEEDS IMPLEMENTED
      * User search for movies by a timestamp.  Movies will displayed
@@ -132,13 +132,8 @@ public class Controller {
      * @param password
      * @return user or null
      */
-    public User login(String email, String password) {
-        try {
-            return model.login(email, password);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    public void login(String email, String password) {
+        model.login(email, password);
     }
     
     /**
@@ -150,13 +145,8 @@ public class Controller {
      * @param password
      * @return
      */
-    public User createUser(String fname, String lname, String email, String password) {
-        try {
-            return model.createUser(fname, lname, email, password);
-        } catch (SQLException ex) {
-            System.out.println(ex);
-            return null;
-        }
+    public void createUser(String fname, String lname, String email, String password) {
+        model.createUser(fname, lname, email, password);
     }
     
     /** NEEDS EMPLIMENTATION
@@ -243,13 +233,8 @@ public class Controller {
      * @param id
      * @return
      */
-    public boolean grantAdminAccess(int id) {
-        try {
-            return model.grantAdminAccess(id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
+    public void grantAdminAccess(int id) {
+        model.grantAdminAccess(id);
     }
 
     /**
@@ -257,13 +242,8 @@ public class Controller {
      * @param id
      * @return
      */
-    public boolean removeAdminAccess(int id) {
-        try {
-            return model.removeAdminAccess(id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
+    public void removeAdminAccess(int id) {
+        model.removeAdminAccess(id);
     }
     
     /**
@@ -273,28 +253,8 @@ public class Controller {
      * @param timestamp
      * @return
      */
-    public Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
-        try {
-            return model.createNewShowing(screenID, imdbID, timestamp);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public ArrayList<Showing> getUpcomingShows() {
-        try {
-            Date date = new Date();
-            Timestamp currentTimestamp = new Timestamp(date.getTime());
-            return model.getUpcomingShows(currentTimestamp);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    public void createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
+        model.createNewShowing(screenID, imdbID, timestamp);
     }
     
     /**
@@ -302,8 +262,8 @@ public class Controller {
      * @param showingID
      * @return
      */
-    public boolean removeShowing(int showingID) {
-        throw new UnsupportedOperationException("Not yet impementaed");
+    public void removeShowing(int showingID) {
+        model.removeShowing(showingID);
     }
     
     /**
@@ -316,40 +276,25 @@ public class Controller {
      * @param xd
      * @return
      */
-    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
-        try {
-            return model.createScreen(name, size, imax, threeD, dbox, xd);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    public void createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
+        model.createScreen(name, size, imax, threeD, dbox, xd);
     }
 
     /**
-     *
-     * @return
+     * Updates the screens model to reflect changes that may have been made
+     * by other connections.
      */
-    public ArrayList getAllScreens() {
-        try {
-            return model.getAllScreens();
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    public void refreshScreens() {
+        model.refreshScreens();
     }
-
+    
     /**
      *
      * @param id
      * @return
      */
-    public boolean deleteScreen(int id) {
-        try {
-            return model.deleteScreen(id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
+    public void deleteScreen(int id) {
+        model.deleteScreen(id);
     }
 
 }
