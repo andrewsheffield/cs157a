@@ -6,12 +6,18 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
-public class Controller {
+/**
+ *
+ * @author sheff
+ */
+public class Model {
     
-    //Controller has exclusive access to the data access layer.
-    private final Model model = new Model();
+    private User currentUser;
+    private ArrayList<User> friends;
+    private ArrayList<Showing> showSearchResults;
+    
+    //Model has exclusive access to the data access layer.
+    private final DataAccess dal = new DataAccess();
     
     /** NEEDS IMPLEMENTED
      * User search for movies by a timestamp.  Movies will displayed
@@ -70,7 +76,7 @@ public class Controller {
     public boolean purchaseTickets(int userID, int showingID, int amount) {
         
         try {
-            return model.purchaseTickets(userID, showingID, amount);
+            return dal.purchaseTickets(userID, showingID, amount);
         }
         catch (SQLException e) {
             System.out.println(e);
@@ -86,7 +92,7 @@ public class Controller {
      */
     public boolean cancelTicket(int userID, int showingID) {
         try {
-            return model.cancelTicket(userID, showingID);
+            return dal.cancelTicket(userID, showingID);
         }
         catch (SQLException e) {
             System.out.println(e);
@@ -134,7 +140,7 @@ public class Controller {
      */
     public User login(String email, String password) {
         try {
-            return model.login(email, password);
+            return dal.login(email, password);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -150,12 +156,11 @@ public class Controller {
      * @param password
      * @return
      */
-    public User createUser(String fname, String lname, String email, String password) {
+    public void createUser(String fname, String lname, String email, String password) {
         try {
-            return model.createUser(fname, lname, email, password);
+            currentUser =  dal.createUser(fname, lname, email, password);
         } catch (SQLException ex) {
             System.out.println(ex);
-            return null;
         }
     }
     
@@ -180,7 +185,7 @@ public class Controller {
      */
     public boolean addFriend(int userID, int friendID) {
         try {
-            return model.addFriend(userID, friendID);
+            return dal.addFriend(userID, friendID);
         }
         catch (SQLException e) {
             System.out.println(e);
@@ -199,16 +204,16 @@ public class Controller {
             searchString = searchString.trim();
             
             if (searchString.contains("@")) {
-                return model.searchUserEmail(searchString);
+                return dal.searchUserEmail(searchString);
             }
             else if (searchString.contains(" ")) {
                 String searchFirst = searchString.split(" ")[0];
                 String searchLast = searchString.split(" ")[1];
                 
-                return model.searchUserFirstAndLast(searchFirst, searchLast);
+                return dal.searchUserFirstAndLast(searchFirst, searchLast);
             }
             else {
-                return model.searchUsersOneName(searchString);
+                return dal.searchUsersOneName(searchString);
             }
         }
         catch (SQLException e) {
@@ -235,17 +240,19 @@ public class Controller {
     public boolean removeAFriend(int userID, int friendID) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
     
-    //#################ADMIN ONLY FUNCTIONS###################################
+    //#################ALL ADMIN FUNCTIONS###################################
 
     /**
      *
      * @param id
      * @return
      */
+    
     public boolean grantAdminAccess(int id) {
         try {
-            return model.grantAdminAccess(id);
+            return dal.grantAdminAccess(id);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -259,7 +266,7 @@ public class Controller {
      */
     public boolean removeAdminAccess(int id) {
         try {
-            return model.removeAdminAccess(id);
+            return dal.removeAdminAccess(id);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -275,7 +282,7 @@ public class Controller {
      */
     public Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
         try {
-            return model.createNewShowing(screenID, imdbID, timestamp);
+            return dal.createNewShowing(screenID, imdbID, timestamp);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -290,7 +297,7 @@ public class Controller {
         try {
             Date date = new Date();
             Timestamp currentTimestamp = new Timestamp(date.getTime());
-            return model.getUpcomingShows(currentTimestamp);
+            return dal.getUpcomingShows(currentTimestamp);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -318,7 +325,7 @@ public class Controller {
      */
     public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
         try {
-            return model.createScreen(name, size, imax, threeD, dbox, xd);
+            return dal.createScreen(name, size, imax, threeD, dbox, xd);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -331,7 +338,7 @@ public class Controller {
      */
     public ArrayList getAllScreens() {
         try {
-            return model.getAllScreens();
+            return dal.getAllScreens();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -345,11 +352,11 @@ public class Controller {
      */
     public boolean deleteScreen(int id) {
         try {
-            return model.deleteScreen(id);
+            return dal.deleteScreen(id);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
-
+    
 }

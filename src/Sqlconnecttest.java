@@ -22,6 +22,7 @@ import org.json.simple.JSONValue;
  */
 public class Sqlconnecttest {
 
+    static MovieAccess mal = new MovieAccess();
     static Controller cont = new Controller();
     static User currentUser = null;
     private static Movie movieSearchResult;
@@ -145,40 +146,6 @@ public class Sqlconnecttest {
         boolean result = cont.addFriend(currentUser.id, friendid);
         if (result) System.out.println("Friend added");
         startApp();
-    }
-
-    private static void searchMovieByName() {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Search Movie by Name: ");
-        String movieName = scan.nextLine();
-        movieName = movieName.replaceAll(" ", "+");
-        
-        URL imdb;
-        try {
-            imdb = new URL("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&r=json");
-            URLConnection yc = imdb.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null) {
-                Object obj = JSONValue.parse(inputLine);
-                JSONObject json = (JSONObject) obj;
-                
-                String title = json.get("Title").toString();
-                String imdbID = json.get("imdbID").toString();
-                String plot = json.get("Plot").toString();
-                
-                Movie movie = new Movie(title, imdbID, plot);
-                movieSearchResult = movie;
-            }
-            in.close();
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    
     }
 
     private static void buyTickets() {
@@ -347,6 +314,13 @@ public class Sqlconnecttest {
 
     private static void removeShowing() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void searchMovieByName() {
+        System.out.println("Search by movie Name: ");
+        Scanner scan = new Scanner(System.in);
+        String searchString = scan.nextLine();
+        movieSearchResult = mal.getMovieByName(searchString);
     }
 
 }

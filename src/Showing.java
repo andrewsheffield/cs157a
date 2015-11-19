@@ -7,16 +7,24 @@ import java.sql.Timestamp;
  */
 public class Showing {
     
+    MovieAccess mal = new MovieAccess();
+    
     int showingID;
     int screenID;
     String imdbID;
     Timestamp timestamp;
+    Movie movie;
 
     public Showing(int showingID, int screenID, String imdbID, Timestamp timestamp) {
         this.showingID = showingID;
         this.screenID = screenID;
         this.imdbID = imdbID;
         this.timestamp = timestamp;
+        initMovie();
+    }
+    
+    private void initMovie() {
+        movie = mal.getMovieByID(this.imdbID);
     }
     
     @Override
