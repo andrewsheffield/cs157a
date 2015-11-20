@@ -46,18 +46,6 @@ public class Controller {
         return arraylist;
     }
     
-    /** NEEDS IMPLEMENTED
-     * Searches for showings that match a movie title.
-     * Search result will be an ArrayList containing showings where
-     * the movie title matches the search result AND the time of the showing
-     * is greater than the current time.  Will return null if no items are found.
-     * @param movieTitle
-     * @return ArrayList of Showing
-     */
-    public ArrayList<Showing> searchShowingsByMovie(String movieTitle) {
-        return null;
-    }
-    
     /** NEEDS ADDED CHECK FOR AMOUNT
      * Purchases tickets for the user for a specific showing.  The amount of 
      * tickets can be anywhere from 1 to the screen size.  or 1 to the remainder
@@ -67,15 +55,8 @@ public class Controller {
      * @param amount
      * @return
      */
-    public boolean purchaseTickets(int userID, int showingID, int amount) {
-        
-        try {
-            return model.purchaseTickets(userID, showingID, amount);
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-            return false;
-        }
+    public void purchaseTickets(int userID, int showingID, int amount) {
+        model.purchaseTickets(userID, showingID, amount);
     }
     
     /**
@@ -84,14 +65,8 @@ public class Controller {
      * @param showingID
      * @return boolean true if the cancel worked.
      */
-    public boolean cancelTicket(int userID, int showingID) {
-        try {
-            return model.cancelTicket(userID, showingID);
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-            return false;
-        }
+    public void cancelTicket(int userID, int showingID) {
+        model.cancelTicket(userID, showingID);
     }
     
     /** NEEDS IMPLEMENTATION
@@ -168,43 +143,8 @@ public class Controller {
      * @param friendID
      * @return boolean if operation is successful
      */
-    public boolean addFriend(int userID, int friendID) {
-        try {
-            return model.addFriend(userID, friendID);
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-            return false;  
-        }
-    }
-    
-    /**
-     * Searches for users in the user databse by a searchstring.  The search string
-     * can contain any substring of first name, last name, first last name, or email.
-     * @param searchString
-     * @return arraylist of users matching the search string
-     */
-    public ArrayList<User> searchUsers(String searchString) {
-        try {
-            searchString = searchString.trim();
-            
-            if (searchString.contains("@")) {
-                return model.searchUserEmail(searchString);
-            }
-            else if (searchString.contains(" ")) {
-                String searchFirst = searchString.split(" ")[0];
-                String searchLast = searchString.split(" ")[1];
-                
-                return model.searchUserFirstAndLast(searchFirst, searchLast);
-            }
-            else {
-                return model.searchUsersOneName(searchString);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-            return null;
-        }
+    public void addFriend(int friendID) {
+        model.addFriend(friendID);
     }
     
     /** NEEDS IMPLEMENTATION
@@ -212,8 +152,8 @@ public class Controller {
      * @param userID
      * @return an ArrayList of Users
      */
-    public ArrayList<User> getFriendsForUser(int userID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<User> getFriends() {
+        return model.getFriends();
     }
     
     /** NEEDS IMPLEMENATION
@@ -222,8 +162,8 @@ public class Controller {
      * @param friendID
      * @return boolean true if operation is successful
      */
-    public boolean removeAFriend(int userID, int friendID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void removeFriend(int id) {
+        model.removeFriend(id);
     }
     
     //#################ADMIN ONLY FUNCTIONS###################################

@@ -29,14 +29,14 @@ public class Sqlconnecttest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+        cont.login("sheff@apple.com", "password");
+        //System.out.println(model.getUserSearchResults("sheff"));
         
-        Timestamp timestamp = Timestamp.valueOf("2007-11-24 14:00:00.0");
+        Timestamp currentTimestamp = Timestamp.valueOf("2015-11-30 14:00:00.0");
         
-        System.out.println(model.getUpcomingShows());
-        cont.createNewShowing(1, "tt2294629", timestamp);
-        ArrayList<Showing> showing = model.getUpcomingShows();
-        
-        System.out.println(showing.get(0).movie.posterURL);
+        //cont.createNewShowing(1, "tt0277434", currentTimestamp);
+        System.out.println(model.getShowingsByMovieTitle("We Were Soldiers"));
         
     }
 }

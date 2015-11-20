@@ -14,12 +14,13 @@ public class Model {
     
     private User currentUser = null;
     private ArrayList<User> friends;
-    private ArrayList<Showing> showingSearchResults;
     private ArrayList<Screen> screens;
     private ArrayList<Showing> allUpcomingShowings;
+    private ArrayList<Ticket> tickets;
     
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
+    private final MovieAccess mal = new MovieAccess();
 
     public Model() {
         Date date = new Date();
@@ -73,8 +74,18 @@ public class Model {
      * @param movieTitle
      * @return ArrayList of Showing
      */
-    public ArrayList<Showing> searchShowingsByMovie(String movieTitle) {
-        return null;
+    public ArrayList<Showing> getShowingsByMovieTitle(String movieTitle) {
+        Movie movie = mal.getMovieByName(movieTitle);
+        try {
+            return dal.getShowingByimdbID(movie.imdbID);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    public Movie getMovieByTitle(String title) {
+        return mal.getMovieByName(title);
     }
     
     /** NEEDS ADDED CHECK FOR AMOUNT
@@ -154,6 +165,7 @@ public class Model {
     public void login(String email, String password) {
         try {
             this.currentUser = dal.login(email, password);
+            this.friends = dal.getFriends(currentUser.id);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -195,13 +207,13 @@ public class Model {
      * @param friendID
      * @return boolean if operation is successful
      */
-    public boolean addFriend(int userID, int friendID) {
+    public void addFriend(int friendID) {
         try {
-            return dal.addFriend(userID, friendID);
+            dal.addFriend(currentUser.id, friendID);
+            friends = dal.getFriends(currentUser.id);
         }
         catch (SQLException e) {
             System.out.println(e);
-            return false;  
         }
     }
     
@@ -211,7 +223,7 @@ public class Model {
      * @param searchString
      * @return arraylist of users matching the search string
      */
-    public ArrayList<User> searchUsers(String searchString) {
+    public ArrayList<User> getUserSearchResults(String searchString) {
         try {
             searchString = searchString.trim();
             
@@ -239,8 +251,8 @@ public class Model {
      * @param userID
      * @return an ArrayList of Users
      */
-    public ArrayList<User> getFriendsForUser(int userID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<User> getFriends() {
+        return friends;
     }
     
     /** NEEDS IMPLEMENATION
@@ -249,8 +261,13 @@ public class Model {
      * @param friendID
      * @return boolean true if operation is successful
      */
-    public boolean removeAFriend(int userID, int friendID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void removeFriend(int friendID) {
+        try {
+            dal.removeFriend(currentUser.id, friendID);
+            friends = dal.getFriends(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

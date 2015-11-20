@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class DataAccess {
@@ -485,8 +486,101 @@ public class DataAccess {
     
     }
 
-    void removeShowing(int showingID) {
+    public void removeShowing(int showingID) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public ArrayList<User> getFriends(int id) throws SQLException {
+        PreparedStatement pstmt = null;
+        ArrayList<User> friends = new ArrayList();
+        
+        String getFriendsQuery = "SELECT * FROM friendview WHERE UserID=? ORDER BY LastName ASC, Firstname ASC";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getFriendsQuery);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int friendID = rs.getInt("FriendID");
+                String fname = rs.getString("FirstName");
+                String lname = rs.getString("LastName");
+                String email = rs.getString("Email");
+                
+                User friend = new User(id, fname, lname, email, false);
+                friends.add(friend);
+            }
+            
+            
+            //Return the user that was created
+            return friends;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    
+    }
+
+    public void removeFriend(int id, int friendID) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String removeFriendQuery = "DELETE FROM friend WHERE UserID=? AND FriendID=?;";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            pstmt = conn.prepareStatement(removeFriendQuery);
+            pstmt.setInt(1, id);
+            pstmt.setInt(2, friendID);
+            pstmt.execute();
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    public ArrayList<Showing> getShowingByimdbID(String imdbID) throws SQLException {
+        Date date = new Date();
+        Timestamp currentTimestamp = new Timestamp(date.getTime());
+        PreparedStatement pstmt = null;
+        ArrayList<Showing> showings = new ArrayList();
+        
+        String getShowingsByimdbDB = "SELECT * FROM showing where imdbID=? AND startTimestamp>=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getShowingsByimdbDB);
+            pstmt.setString(1, imdbID);
+            pstmt.setTimestamp(2, currentTimestamp);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int showingID = rs.getInt("ShowingID");
+                int screenID = rs.getInt("ScreenID");
+                Timestamp startTime = rs.getTimestamp("startTimestamp");
+                
+                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                showings.add(showing);
+            }
+            
+            return showings;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
     }
     
     
