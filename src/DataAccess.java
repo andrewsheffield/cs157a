@@ -281,6 +281,8 @@ public class DataAccess {
         }
     }
 
+
+
     
     Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
         PreparedStatement pstmt = null;
@@ -488,6 +490,34 @@ public class DataAccess {
 
     public void removeShowing(int showingID) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public ArrayList<Ticket> getCurrentPurchase(int id) throws  SQLException{
+        PreparedStatement pstmt = null;
+        ArrayList<Ticket> tickets = new ArrayList();
+        String getTicketQuery = "SELECT * FROM ticket WHERE UserID>=? ORDER BY startTimestamp ASC";
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getTicketQuery);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int userID = rs.getInt("UserID");
+                int showingID = rs.getInt("ShowingID");
+
+                Ticket ticket = new Ticket(userID, showingID);
+                tickets.add(ticket);
+            }
+            return tickets;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
     }
 
     public ArrayList<User> getFriends(int id) throws SQLException {
