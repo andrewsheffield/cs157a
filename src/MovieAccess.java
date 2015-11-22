@@ -45,9 +45,9 @@ public class MovieAccess {
             }
             in.close();
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sqlconnecttest2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sqlconnecttest2.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -77,10 +77,10 @@ public class MovieAccess {
             }
             in.close();
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sqlconnecttest2.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } catch (IOException ex) {
-            Logger.getLogger(Sqlconnecttest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sqlconnecttest2.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;

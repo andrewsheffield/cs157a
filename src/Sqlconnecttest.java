@@ -29,14 +29,15 @@ public class Sqlconnecttest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        cont.login("sheff@apple.com", "password");
-        //System.out.println(model.getUserSearchResults("sheff"));
+        cont.createUser("peter", "pham", "ppha@sjsu.edu", "1234");
+        cont.login("ppha@sjsu.edu", "1234");
+        System.out.println(model.getUserSearchResults("pete"));
         
         Timestamp currentTimestamp = Timestamp.valueOf("2015-11-30 14:00:00.0");
         
-        //cont.createNewShowing(1, "tt0277434", currentTimestamp);
+        cont.createNewShowing(1, "tt0277434", currentTimestamp);
         System.out.println(model.getShowingsByMovieTitle("We Were Soldiers"));
-        
+
+
     }
 }

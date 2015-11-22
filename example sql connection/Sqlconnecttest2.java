@@ -8,17 +8,17 @@ import java.sql.Statement;
  *
  * @author sheff
  */
-public class Sqlconnecttest {
+public class Sqlconnecttest2 {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/JavaTest?" +
-                                   "user=root&password=");
+
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/theaterpro", "root", "1234");
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM test");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM user");
             
             while (rs.next()) {
                 System.out.println(rs.getString("fName"));

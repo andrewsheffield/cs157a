@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="c3p0-0.9.1-pre6.src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/mysql-connector-java-5.1.37/src/lib/c3p0-0.9.1-pre6.src.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/mysql-connector-java-5.1.37/src" />
+    </SOURCES>
+  </library>
+</component>
