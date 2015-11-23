@@ -96,12 +96,32 @@ DROP TABLE IF EXISTS `theaterpro`.`ticket` ;
 CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
   `UserID` INT NULL,
   `ShowingID` INT NULL,
+  `updatedAt` TIMESTAMP NOT NULL,
   INDEX `UserID_idx` (`UserID` ASC) ,
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
+  INDEX `updatedAt_idx` (`updatedAt` ASC) ,
   CONSTRAINT `TicketHolderID`
     FOREIGN KEY (`UserID`)
     REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `ShowingID`
+    FOREIGN KEY (`ShowingID`)
+    REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
+;
+
+-- -----------------------------------------------------
+-- Table `theaterpro`.`ticketArchive`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `theaterpro`.`ticketArchive` ;
+
+CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketArchive` (
+  `UserID` INT NULL,
+  `ShowingID` INT NULL,
+  INDEX `UserID_idx` (`UserID` ASC) ,
+  INDEX `ShowingID_idx` (`ShowingID` ASC) ,
+  CONSTRAINT `TicketHolderIDArchive`
+    FOREIGN KEY (`UserID`)
+    REFERENCES `theaterpro`.`user` (`UserID`),
+  CONSTRAINT `ShowingIDArchive`
     FOREIGN KEY (`ShowingID`)
     REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
 ;
@@ -159,6 +179,17 @@ BEGIN
 END //
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS ArchiveTickets;
+delimiter //
+CREATE Procedure ArchiveTickets(IN cutOff TIMESTAMP)
+Begin
+start transaction;
+Insert into ticketArchive
+Select UserID, ShowingID
+from ticket where updatedAt < cutOff;
+Delete from ticket where updatedAt < cutOff; commit; end; //
+delimiter ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
