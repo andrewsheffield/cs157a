@@ -80,10 +80,30 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showing` (
   `imdbID` VARCHAR(45) NULL,
   `startTimestamp` DATETIME NULL,
   `endTimestamp` DATETIME NULL,
+  `updatedAt` TIMESTAMP NOT NULL,
   PRIMARY KEY (`ShowingID`) ,
   UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenID`
+    FOREIGN KEY (`ScreenID`)
+    REFERENCES `theaterpro`.`screen` (`ScreenID`))
+;
+
+-- -----------------------------------------------------
+-- Table `theaterpro`.`showingArchive`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `theaterpro`.`showingArchive` ;
+
+CREATE TABLE IF NOT EXISTS `theaterpro`.`showingArchive` (
+  `ShowingID` INT NOT NULL AUTO_INCREMENT,
+  `ScreenID` INT NULL,
+  `imdbID` VARCHAR(45) NULL,
+  `startTimestamp` DATETIME NULL,
+  `endTimestamp` DATETIME NULL,
+  PRIMARY KEY (`ShowingID`) ,
+  UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
+  INDEX `ScreenID_idx` (`ScreenID` ASC) ,
+  CONSTRAINT `ScreenIDArchive`
     FOREIGN KEY (`ScreenID`)
     REFERENCES `theaterpro`.`screen` (`ScreenID`))
 ;
@@ -99,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
   `updatedAt` TIMESTAMP NOT NULL,
   INDEX `UserID_idx` (`UserID` ASC) ,
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
-  INDEX `updatedAt_idx` (`updatedAt` ASC) ,
   CONSTRAINT `TicketHolderID`
     FOREIGN KEY (`UserID`)
     REFERENCES `theaterpro`.`user` (`UserID`),
@@ -179,17 +198,35 @@ BEGIN
 END //
 DELIMITER ;
 
+-- -----------------------------------------------------
+-- Procedure archiveTickets()
+-- -----------------------------------------------------
 
-DROP PROCEDURE IF EXISTS ArchiveTickets;
-delimiter //
-CREATE Procedure ArchiveTickets(IN cutOff TIMESTAMP)
-Begin
-start transaction;
-Insert into ticketArchive
-Select UserID, ShowingID
-from ticket where updatedAt < cutOff;
-Delete from ticket where updatedAt < cutOff; commit; end; //
-delimiter ;
+DROP PROCEDURE IF EXISTS archiveTickets;
+DELIMITER //
+CREATE PROCEDURE archiveTickets(IN cutOff TIMESTAMP)
+BEGIN
+START TRANSACTION;
+INSERT INTO ticketArchive
+SELECT UserID, ShowingID
+FROM ticket WHERE updatedAt < cutOff;
+DELETE FROM ticket WHERE updatedAt < cutOff; COMMIT; END; //
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- Procedure archiveShowings()
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS archiveShowings;
+DELIMITER //
+CREATE PROCEDURE archiveShowings(IN cutOff TIMESTAMP)
+BEGIN 
+START TRANSACTION;
+INSERT INTO showingArchive
+SELECT ShowingID, ScreenID, imdbID, startTimestamp, endTimestamp
+FROM ticket WHERE updatedAt < cutOff;
+DELETE FROM ticket WHERE updatedAt < cutOff; COMMIT; END; //
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
