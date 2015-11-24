@@ -502,13 +502,12 @@ public class DataAccess {
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
+                boolean isAdmin = rs.getBoolean("isAdmin");
                 
-                User friend = new User(id, fname, lname, email, false);
+                User friend = new User(friendID, fname, lname, email, isAdmin);
                 friends.add(friend);
             }
             
-            
-            //Return the user that was created
             return friends;
         }
         catch(SQLException e) {
@@ -676,6 +675,31 @@ public class DataAccess {
         finally {
             pstmt.close();
         }
+    }
+
+    void updateUserInfo(int id, String fname, String lname, String email) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String updateUserInfoQuery = "UPDATE user SET FirstName=?, LastName=?, Email=? WHERE UserID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            pstmt = conn.prepareStatement(updateUserInfoQuery);
+            pstmt.setString(1, fname);
+            pstmt.setString(2, lname);
+            pstmt.setString(3, email);
+            pstmt.setInt(4, id);
+            pstmt.execute();
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            pstmt.close();
+        }
+        
     }
     
     

@@ -82,8 +82,8 @@ public class Controller {
      * @param email
      * @return the User after it has been updated
      */
-    public User updateUserInfo(String fname, String lname, String email) {
-        return null;
+    public void updateUserInfo(String fname, String lname, String email) {
+        model.updateUserInfo(fname, lname, email);
     }
     
     /**

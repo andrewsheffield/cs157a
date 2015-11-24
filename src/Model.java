@@ -16,7 +16,6 @@ public class Model {
     private ArrayList<User> friends;
     private ArrayList<Screen> screens;
     private ArrayList<Showing> allUpcomingShowings;
-    private ArrayList<Ticket> tickets;
     
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
@@ -152,6 +151,15 @@ public class Model {
         }
     }
     
+    public ArrayList<Ticket> getPurchasedTickets(int friendID) {
+        try {
+            return dal.getPurchasedTickets(friendID);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
     /** NEEDS IMPLEMENTATION
      * Gets all the tickets purchased by the user where the showing was 
      * previous to the current timestamp
@@ -178,6 +186,7 @@ public class Model {
         try {
             this.currentUser = dal.login(email, password);
             this.friends = dal.getFriends(currentUser.id);
+            
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -216,8 +225,14 @@ public class Model {
      * @param email
      * @return the User after it has been updated
      */
-    public User updateUserInfo(String fname, String lname, String email) {
-        return null;
+    public void updateUserInfo(String fname, String lname, String email) {
+        try {
+            dal.updateUserInfo(currentUser.id, fname, lname, email);
+            User newUser = new User(currentUser.id, fname, lname, email, currentUser.isAdmin);
+            currentUser = newUser;
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -328,11 +343,8 @@ public class Model {
      * @return
      */
     public void createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
-        Date date = new Date();
-        Timestamp currentTimestamp = new Timestamp(date.getTime());
         try {
             dal.createNewShowing(screenID, imdbID, timestamp);
-            allUpcomingShowings = dal.getUpcomingShows(timestamp);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -343,7 +355,14 @@ public class Model {
      * @return
      */
     public ArrayList<Showing> getUpcomingShows() {
-        return allUpcomingShowings;
+        Date date = new Date();
+        Timestamp currentTimestamp = new Timestamp(date.getTime());
+        try {
+            return dal.getUpcomingShows(currentTimestamp);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -354,12 +373,7 @@ public class Model {
     public void removeShowing(int showingID) {
         Date date = new Date();
         Timestamp currentTimestamp = new Timestamp(date.getTime());
-        try {
-            dal.removeShowing(showingID);
-            allUpcomingShowings = dal.getUpcomingShows(currentTimestamp);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dal.removeShowing(showingID);
     }
     
     /**
@@ -375,7 +389,6 @@ public class Model {
     public void createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
         try {
             dal.createScreen(name, size, imax, threeD, dbox, xd);
-            screens = dal.getAllScreens();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -386,7 +399,12 @@ public class Model {
      * @return
      */
     public ArrayList<Screen> getAllScreens() {
-        return screens;
+        try {
+            return dal.getAllScreens();
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -397,7 +415,6 @@ public class Model {
     public void deleteScreen(int id) {
         try {
             dal.deleteScreen(id);
-            screens = dal.getAllScreens();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }

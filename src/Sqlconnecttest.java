@@ -30,8 +30,10 @@ public class Sqlconnecttest {
      */
     public static void main(String[] args) {
 
-        cont.login("sheff@apple.com", "password");
-        cont.updateUserInfo("Bob", null, null);
+        cont.login("andrew@test.com", "password");
+        //cont.updateUserInfo("Andrew", "Sheffield", "andrew@test.com");
+        
+        System.out.println(model.getPurchasedTickets(2));
         
         
         //System.out.println(model.getUserSearchResults("sheff"));
@@ -40,11 +42,11 @@ public class Sqlconnecttest {
         
         //cont.createNewShowing(1, "tt2294629", currentTimestamp);
         //System.out.println(model.getUpcomingShows());
-        //cont.purchaseTickets(2, 10);
+        cont.purchaseTickets(1, 3);
         //cont.cancelTicket(1, 5);
         
         //System.out.println(model.getPurchasedTickets());
         //cont.sendTicketToFriend(2, 1, 1);
-        System.out.println(model.getUser());
+        //System.out.println(model.getUser());
     }
 }
