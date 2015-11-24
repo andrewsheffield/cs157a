@@ -578,6 +578,48 @@ public class DataAccess {
         }
     }
 
+    public void archiveTickets(Timestamp cutOff) throws SQLException {
+        CallableStatement cstmt = null;
+
+        String archiveQuery = "CALL archiveTickets(?)";
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+
+            cstmt = conn.prepareCall(archiveQuery);
+            cstmt.setTimestamp(1, cutOff);
+            cstmt.execute();
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            cstmt.close();
+        }
+    }
+
+    public void archiveShowings(Timestamp cutOff) throws SQLException {
+        CallableStatement cstmt = null;
+
+        String archiveQuery = "CALL archiveShowings(?)";
+
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+
+            cstmt = conn.prepareCall(archiveQuery);
+            cstmt.setTimestamp(1, cutOff);
+            cstmt.execute();
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            cstmt.close();
+        }
+    }
+
     public ArrayList<Showing> getShowingByimdbID(String imdbID) throws SQLException {
         Date date = new Date();
         Timestamp currentTimestamp = new Timestamp(date.getTime());
