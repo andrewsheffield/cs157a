@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
     REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `ShowingID`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
+    REFERENCES `theaterpro`.`showing` (`ShowingID`))
 ;
 
 -- -----------------------------------------------------

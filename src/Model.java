@@ -97,30 +97,27 @@ public class Model {
      * @param amount
      * @return
      */
-    public boolean purchaseTickets(int userID, int showingID, int amount) {
-        
+    public void purchaseTickets(int showingID, int amount) {
         try {
-            return dal.purchaseTickets(userID, showingID, amount);
-        }
-        catch (SQLException e) {
+            dal.purchaseTickets(currentUser.id, showingID, amount);
+        } catch (SQLException e) {
             System.out.println(e);
-            return false;
         }
     }
     
     /**
      * Cancels all the purchased tickets by a user for a specific showing.
      * @param userID
+     * @param amount
      * @param showingID
      * @return boolean true if the cancel worked.
      */
-    public boolean cancelTicket(int userID, int showingID) {
+    public void cancelTicket(int showingID, int amount) {
         try {
-            return dal.cancelTicket(userID, showingID);
+            dal.cancelTicket(currentUser.id, showingID, amount);
         }
         catch (SQLException e) {
             System.out.println(e);
-            return false;
         }
     }
     
@@ -129,11 +126,16 @@ public class Model {
      * After this change the FriendID will control this ticket.
      * @param UserID
      * @param FriendID
+     * @param amount
      * @param ShowingID
      * @return true if transfer is successful
      */
-    public boolean sendTicketToFriend(int UserID, int FriendID, int ShowingID) {
-        return false;
+    public void sendTicketToFriend(int FriendID, int ShowingID, int amount) {
+        try {
+            dal.sendTicketToFriend(currentUser.id, FriendID, ShowingID, amount);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /** NEEDS IMPLEMENTATION
@@ -141,8 +143,13 @@ public class Model {
      * @param UserID
      * @return ArrayList of tickets purchased by user or transfered to user.
      */
-    public ArrayList<Ticket> viewPurchasedTickets(int UserID) {
-        return null;
+    public ArrayList<Ticket> getPurchasedTickets() {
+        try {
+            return dal.getPurchasedTickets(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /** NEEDS IMPLEMENTATION
@@ -151,8 +158,13 @@ public class Model {
      * @param UserID
      * @return ArrayList of old tickets purchased by user
      */
-    public ArrayList<Ticket> viewTicketHistory(int UserID) {
-        return null;
+    public ArrayList<Ticket> getTicketHistory() {
+        try {
+            return dal.getTicketHistory(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -169,6 +181,14 @@ public class Model {
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public User getUser() {
+        return currentUser;
+    }
+    
+    public void logout() {
+        currentUser = null;
     }
     
     /**
@@ -368,14 +388,6 @@ public class Model {
     public ArrayList<Screen> getAllScreens() {
         return screens;
     }
-
-    /**
-     * Updates the screens model to reflect changes that may have been made
-     * by other connections.
-     */
-    void refreshScreens() {
-        this.screens = getAllScreens();
-    }
     
     /**
      *
@@ -390,5 +402,7 @@ public class Model {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
 }

@@ -256,35 +256,28 @@ public class DataAccess {
     }
     
     //Cancel purchase
-    public boolean cancelTicket(int userID, int showingID) throws SQLException {
+    public void cancelTicket(int userID, int showingID, int amount) throws SQLException {
 
         PreparedStatement pstmt = null;
 
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
-            pstmt = conn.prepareStatement("DELETE FROM ticket WHERE userID = ? and showingID = ?");
+            pstmt = conn.prepareStatement("DELETE FROM ticket WHERE userID = ? and showingID = ? limit ?");
             pstmt.setInt(1, userID);
             pstmt.setInt(2, showingID);
+            pstmt.setInt(3, amount);
 
             pstmt.execute();
-
-            System.out.println("DELETE: User " + userID + " has cancelled purchase " + showingID);
-
-            return true;
         }
         catch(SQLException e) {
             System.out.println(e);
-            return false;
         }
         finally {
             pstmt.close();
         }
     }
 
-
-
-    
-    Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
+    public Screen createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) throws SQLException {
         PreparedStatement pstmt = null;
         
         String newScreenQuery = "INSERT INTO screen(Name, Size, IMAX, 3D, DBOX, XD) Values (?, ?, ?, ?, ?, ?)";
@@ -317,7 +310,7 @@ public class DataAccess {
         }
     }
 
-    ArrayList getAllScreens() throws SQLException {
+    public ArrayList getAllScreens() throws SQLException {
         ArrayList arrayList = new ArrayList();
         
         PreparedStatement pstmt = null;
@@ -492,34 +485,6 @@ public class DataAccess {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public ArrayList<Ticket> getCurrentPurchase(int id) throws  SQLException{
-        PreparedStatement pstmt = null;
-        ArrayList<Ticket> tickets = new ArrayList();
-        String getTicketQuery = "SELECT * FROM ticket WHERE UserID>=? ORDER BY startTimestamp ASC";
-        try {
-            Connection conn = DriverManager.getConnection(databaseURI);
-            pstmt = conn.prepareStatement(getTicketQuery);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                int userID = rs.getInt("UserID");
-                int showingID = rs.getInt("ShowingID");
-
-                Ticket ticket = new Ticket(userID, showingID);
-                tickets.add(ticket);
-            }
-            return tickets;
-        }
-        catch(SQLException e) {
-            System.out.println(e);
-            return null;
-        }
-        finally {
-            pstmt.close();
-        }
-    }
-
     public ArrayList<User> getFriends(int id) throws SQLException {
         PreparedStatement pstmt = null;
         ArrayList<User> friends = new ArrayList();
@@ -603,6 +568,106 @@ public class DataAccess {
             }
             
             return showings;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    public ArrayList<Ticket> getPurchasedTickets(int userID) throws SQLException {
+        PreparedStatement pstmt = null;
+        ArrayList<Ticket> tickets = new ArrayList();
+        
+        String getTicketsForUserQuery = "select * from ticket, showing where UserID=? AND ticket.ShowingID=showing.ShowingID";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getTicketsForUserQuery);
+            pstmt.setInt(1, userID);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int showingID = rs.getInt("ShowingID");
+                int screenID = rs.getInt("ScreenID");
+                String imdbID = rs.getString("imdbID");
+                Timestamp startTime = rs.getTimestamp("startTimestamp");
+                Timestamp purchaseTime = rs.getTimestamp("ticket.updatedAt");
+                
+                
+                
+                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                Ticket ticket = new Ticket(showing, purchaseTime);
+                tickets.add(ticket);
+            }
+            
+            return tickets;
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    public void sendTicketToFriend(int userID, int FriendID, int ShowingID, int amount) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String sendTicketQuery = "UPDATE ticket set UserID=? where UserID=? AND ShowingID=? limit ?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            pstmt = conn.prepareStatement(sendTicketQuery);
+            pstmt.setInt(1, FriendID);
+            pstmt.setInt(2, userID);
+            pstmt.setInt(3, ShowingID);
+            pstmt.setInt(4, amount);
+            System.out.println(pstmt.toString());
+            pstmt.execute();
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            pstmt.close();
+        }
+    }
+
+    public ArrayList<Ticket> getTicketHistory(int UserID) throws SQLException {
+        Date date = new Date();
+        Timestamp currentTimestamp = new Timestamp(date.getTime());
+        PreparedStatement pstmt = null;
+        ArrayList<Ticket> tickets = new ArrayList();
+        
+        String getPurchaseHistoryQuery = "select * from ticket, showing where UserID=? AND ticket.ShowingID=showing.ShowingID AND showing.startTimestamp<?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(getPurchaseHistoryQuery);
+            pstmt.setInt(1, UserID);
+            pstmt.setTimestamp(2, currentTimestamp);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int showingID = rs.getInt("ShowingID");
+                int screenID = rs.getInt("ScreenID");
+                String imdbID = rs.getString("imdbID");
+                Timestamp startTime = rs.getTimestamp("startTimestamp");
+                Timestamp purchaseTime = rs.getTimestamp("ticket.updatedAt");
+                
+                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                Ticket ticket = new Ticket(showing, purchaseTime);
+                tickets.add(ticket);
+            }
+            
+            return tickets;
         }
         catch(SQLException e) {
             System.out.println(e);
