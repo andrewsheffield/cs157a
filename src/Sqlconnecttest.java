@@ -22,14 +22,13 @@ import org.json.simple.JSONValue;
  * @author sheff
  */
 public class Sqlconnecttest {
-
-    static Controller cont = new Controller();
-    static Model model = cont.model;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        Controller cont = new Controller();
 
         //cont.login("andrew@test.com", "password");
         //cont.updateUserInfo("Andrew", "Sheffield", "andrew@test.com");
@@ -53,7 +52,7 @@ public class Sqlconnecttest {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    MainFrame frame = new MainFrame();
+                    MainFrame frame = new MainFrame(cont);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

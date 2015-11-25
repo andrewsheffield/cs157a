@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -34,7 +35,7 @@ public class Login extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JLabel lblWelcomeToThe = new JLabel("Welcome to the Theatre");
+		JLabel lblWelcomeToThe = new JLabel("Welcome to Theater Pro");
 		GridBagConstraints gbc_lblWelcomeToThe = new GridBagConstraints();
 		gbc_lblWelcomeToThe.insets = new Insets(0, 0, 5, 5);
 		gbc_lblWelcomeToThe.gridx = 6;
@@ -88,7 +89,21 @@ public class Login extends JPanel {
 		
 
 	}
+        
+        public void login(Controller cont) {
+            cont.login(login.getText(), password.getText());
+        }
 	
+        public void setFalseCred() {
+            JLabel lblIncorrect = new JLabel("Incorrect Username or Password");
+            lblIncorrect.setForeground(Color.red);
+            GridBagConstraints gbc_lblIncorrect = new GridBagConstraints();
+            gbc_lblIncorrect.insets = new Insets(0, 0, 5, 5);
+            gbc_lblIncorrect.gridx = 6;
+            gbc_lblIncorrect.gridy = 8;
+            add(lblIncorrect, gbc_lblIncorrect);
+        }
+        
 	
 
 }

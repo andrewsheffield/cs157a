@@ -1,3 +1,4 @@
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JTextField;
@@ -9,20 +10,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class CreateUser extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JLabel lblCreateUser;
 	public JButton btnBack;
 	public JButton btnCreate;
 	private JTextField email;
 	private JTextField lName;
 	private JTextField fName;
+        private JTextField password;
 
 	/**
 	 * Create the panel.
 	 */
 	public CreateUser() {
+            
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -84,21 +83,41 @@ public class CreateUser extends JPanel {
 		gbc_email.gridy = 8;
 		add(email, gbc_email);
 		email.setColumns(10);
+                
+                JLabel lblPassword = new JLabel("Password");
+		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
+		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPassword.gridx = 2;
+		gbc_lblPassword.gridy = 9;
+		add(lblPassword, gbc_lblPassword);
+		
+		password = new JTextField();
+		GridBagConstraints gbc_password = new GridBagConstraints();
+		gbc_password.insets = new Insets(0, 0, 5, 5);
+		gbc_password.fill = GridBagConstraints.HORIZONTAL;
+		gbc_password.gridx = 2;
+		gbc_password.gridy = 10;
+		add(password, gbc_password);
+		password.setColumns(10);
 		
 		btnBack = new JButton("Back");
 		GridBagConstraints gbc_btnBack = new GridBagConstraints();
 		gbc_btnBack.insets = new Insets(0, 0, 5, 5);
 		gbc_btnBack.gridx = 1;
-		gbc_btnBack.gridy = 9;
+		gbc_btnBack.gridy = 11;
 		add(btnBack, gbc_btnBack);
 		
 		btnCreate = new JButton("Create");
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCreate.gridx = 3;
-		gbc_btnCreate.gridy = 9;
+		gbc_btnCreate.gridy = 11;
 		add(btnCreate, gbc_btnCreate);
-		
+               
 	}
+        
+        public void createUser(Controller cont) {
+            cont.createUser(fName.getText(), lName.getText(), email.getText(), password.getText());
+        }
 
 }

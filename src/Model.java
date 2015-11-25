@@ -14,22 +14,13 @@ public class Model {
     
     private User currentUser = null;
     private ArrayList<User> friends;
-    private ArrayList<Screen> screens;
-    private ArrayList<Showing> allUpcomingShowings;
-    
+
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
     private final MovieAccess mal = new MovieAccess();
 
-    public Model() {
-        Date date = new Date();
-        Timestamp currentTimestamp = new Timestamp(date.getTime());
-        try {
-            this.screens = dal.getAllScreens();
-            this.allUpcomingShowings = dal.getUpcomingShows(currentTimestamp);
-        } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public boolean isLoggedIn() {
+        return (currentUser != null);
     }
     
     /** NEEDS IMPLEMENTED
@@ -185,8 +176,9 @@ public class Model {
     public void login(String email, String password) {
         try {
             this.currentUser = dal.login(email, password);
-            this.friends = dal.getFriends(currentUser.id);
-            
+            if (isLoggedIn()) {
+                this.friends = dal.getFriends(currentUser.id);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
