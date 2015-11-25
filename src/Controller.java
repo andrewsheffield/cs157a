@@ -1,10 +1,6 @@
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -12,39 +8,6 @@ public class Controller {
     
     //Controller has exclusive access to the data access layer.
     final Model model = new Model();
-    
-    /** NEEDS IMPLEMENTED
-     * User search for movies by a timestamp.  Movies will displayed
-     * for the DAY of the timestamp but only after the current date and
-     * time.  ie If the user selects movies for today only the movie which
-     * have not started will be displayed.  This will return any movie regardless
-     * of extra features.
-     * @param searchDate
-     * @return ArrayList
-     */
-    public ArrayList<Showing> searchShowingsByFilter(Timestamp searchDate) {
-        ArrayList<Showing> arraylist= new ArrayList<>();
-        return arraylist;
-    }
-    
-    /** NEEDS IMPLEMENTED
-     * User search for movies by a timestamp.  Movies will displayed
-     * for the DAY of the timestamp but only after the current date and
-     * time.  ie If the user selects movies for today only the movie which
-     * have not started will be displayed.  If the boolean is set to false
-     * the return will ignore that as an option. else will return only the
-     * values selected as true.
-     * @param searchDate
-     * @param isIMAX
-     * @param isXD
-     * @param is3D
-     * @param isDBOX
-     * @return ArrayList
-     */
-    public ArrayList<Showing> searchShowingsByFilter(Timestamp searchDate, boolean isIMAX, boolean isXD, boolean is3D, boolean isDBOX) {
-        ArrayList<Showing> arraylist= new ArrayList<>();
-        return arraylist;
-    }
     
     /** NEEDS ADDED CHECK FOR AMOUNT
      * Purchases tickets for the user for a specific showing.  The amount of 
@@ -55,18 +18,19 @@ public class Controller {
      * @param amount
      * @return
      */
-    public void purchaseTickets(int userID, int showingID, int amount) {
-        model.purchaseTickets(userID, showingID, amount);
+    public void purchaseTickets(int showingID, int amount) {
+        model.purchaseTickets(showingID, amount);
     }
     
     /**
      * Cancels all the purchased tickets by a user for a specific showing.
      * @param userID
+     * @param amount
      * @param showingID
      * @return boolean true if the cancel worked.
      */
-    public void cancelTicket(int userID, int showingID) {
-        model.cancelTicket(userID, showingID);
+    public void cancelTicket(int showingID, int amount) {
+        model.cancelTicket(showingID, amount);
     }
     
     /** NEEDS IMPLEMENTATION
@@ -74,30 +38,12 @@ public class Controller {
      * After this change the FriendID will control this ticket.
      * @param UserID
      * @param FriendID
+     * @param amount
      * @param ShowingID
      * @return true if transfer is successful
      */
-    public boolean sendTicketToFriend(int UserID, int FriendID, int ShowingID) {
-        return false;
-    }
-    
-    /** NEEDS IMPLEMENTATION
-     * Gets the users purchased tickets.  Returns all future tickets owned by the user
-     * @param UserID
-     * @return ArrayList of tickets purchased by user or transfered to user.
-     */
-    public ArrayList<Ticket> viewPurchasedTickets(int UserID) {
-        return null;
-    }
-    
-    /** NEEDS IMPLEMENTATION
-     * Gets all the tickets purchased by the user where the showing was 
-     * previous to the current timestamp
-     * @param UserID
-     * @return ArrayList of old tickets purchased by user
-     */
-    public ArrayList<Ticket> viewTicketHistory(int UserID) {
-        return null;
+    public void sendTicketToFriend(int FriendID, int ShowingID, int amount) {
+        model.sendTicketToFriend(FriendID, ShowingID, amount);
     }
     
     /**
@@ -109,6 +55,10 @@ public class Controller {
      */
     public void login(String email, String password) {
         model.login(email, password);
+    }
+    
+    public void logout() {
+        model.logout();
     }
     
     /**
@@ -132,8 +82,8 @@ public class Controller {
      * @param email
      * @return the User after it has been updated
      */
-    public User updateUserInfo(String fname, String lname, String email) {
-        return null;
+    public void updateUserInfo(String fname, String lname, String email) {
+        model.updateUserInfo(fname, lname, email);
     }
     
     /**
@@ -218,14 +168,6 @@ public class Controller {
      */
     public void createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
         model.createScreen(name, size, imax, threeD, dbox, xd);
-    }
-
-    /**
-     * Updates the screens model to reflect changes that may have been made
-     * by other connections.
-     */
-    public void refreshScreens() {
-        model.refreshScreens();
     }
     
     /**

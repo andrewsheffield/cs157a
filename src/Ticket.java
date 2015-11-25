@@ -1,14 +1,18 @@
-public class Ticket {
-    public int userID;
-    public int showingID;
 
-    Ticket(int userID, int showingID) {
-        this.userID = userID;
-        this.showingID = showingID;
+import java.sql.Timestamp;
+
+public class Ticket {
+    
+    public Showing showing;
+    public Timestamp purchaseTimestamp;
+
+    Ticket(Showing showing, Timestamp purchaseTimestamp) {
+        this.showing = showing;
+        this.purchaseTimestamp = purchaseTimestamp;
     }
 
     @Override
     public String toString() {
-        return "{USER ID:" + userID + ", "  + "SHOWING ID:" + showingID +  "}";
+        return showing.toString();
     }
 }

@@ -16,7 +16,6 @@ public class Model {
     private ArrayList<User> friends;
     private ArrayList<Screen> screens;
     private ArrayList<Showing> allUpcomingShowings;
-    private ArrayList<Ticket> tickets;
     
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
@@ -97,30 +96,27 @@ public class Model {
      * @param amount
      * @return
      */
-    public boolean purchaseTickets(int userID, int showingID, int amount) {
-        
+    public void purchaseTickets(int showingID, int amount) {
         try {
-            return dal.purchaseTickets(userID, showingID, amount);
-        }
-        catch (SQLException e) {
+            dal.purchaseTickets(currentUser.id, showingID, amount);
+        } catch (SQLException e) {
             System.out.println(e);
-            return false;
         }
     }
     
     /**
      * Cancels all the purchased tickets by a user for a specific showing.
      * @param userID
+     * @param amount
      * @param showingID
      * @return boolean true if the cancel worked.
      */
-    public boolean cancelTicket(int userID, int showingID) {
+    public void cancelTicket(int showingID, int amount) {
         try {
-            return dal.cancelTicket(userID, showingID);
+            dal.cancelTicket(currentUser.id, showingID, amount);
         }
         catch (SQLException e) {
             System.out.println(e);
-            return false;
         }
     }
     
@@ -129,11 +125,16 @@ public class Model {
      * After this change the FriendID will control this ticket.
      * @param UserID
      * @param FriendID
+     * @param amount
      * @param ShowingID
      * @return true if transfer is successful
      */
-    public boolean sendTicketToFriend(int UserID, int FriendID, int ShowingID) {
-        return false;
+    public void sendTicketToFriend(int FriendID, int ShowingID, int amount) {
+        try {
+            dal.sendTicketToFriend(currentUser.id, FriendID, ShowingID, amount);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /** NEEDS IMPLEMENTATION
@@ -141,8 +142,22 @@ public class Model {
      * @param UserID
      * @return ArrayList of tickets purchased by user or transfered to user.
      */
-    public ArrayList<Ticket> viewPurchasedTickets(int UserID) {
-        return null;
+    public ArrayList<Ticket> getPurchasedTickets() {
+        try {
+            return dal.getPurchasedTickets(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    public ArrayList<Ticket> getPurchasedTickets(int friendID) {
+        try {
+            return dal.getPurchasedTickets(friendID);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /** NEEDS IMPLEMENTATION
@@ -151,8 +166,13 @@ public class Model {
      * @param UserID
      * @return ArrayList of old tickets purchased by user
      */
-    public ArrayList<Ticket> viewTicketHistory(int UserID) {
-        return null;
+    public ArrayList<Ticket> getTicketHistory() {
+        try {
+            return dal.getTicketHistory(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -166,9 +186,18 @@ public class Model {
         try {
             this.currentUser = dal.login(email, password);
             this.friends = dal.getFriends(currentUser.id);
+            
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public User getUser() {
+        return currentUser;
+    }
+    
+    public void logout() {
+        currentUser = null;
     }
     
     /**
@@ -196,8 +225,14 @@ public class Model {
      * @param email
      * @return the User after it has been updated
      */
-    public User updateUserInfo(String fname, String lname, String email) {
-        return null;
+    public void updateUserInfo(String fname, String lname, String email) {
+        try {
+            dal.updateUserInfo(currentUser.id, fname, lname, email);
+            User newUser = new User(currentUser.id, fname, lname, email, currentUser.isAdmin);
+            currentUser = newUser;
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -308,11 +343,8 @@ public class Model {
      * @return
      */
     public void createNewShowing(int screenID, String imdbID, Timestamp timestamp) {
-        Date date = new Date();
-        Timestamp currentTimestamp = new Timestamp(date.getTime());
         try {
             dal.createNewShowing(screenID, imdbID, timestamp);
-            allUpcomingShowings = dal.getUpcomingShows(timestamp);
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -323,7 +355,14 @@ public class Model {
      * @return
      */
     public ArrayList<Showing> getUpcomingShows() {
-        return allUpcomingShowings;
+        Date date = new Date();
+        Timestamp currentTimestamp = new Timestamp(date.getTime());
+        try {
+            return dal.getUpcomingShows(currentTimestamp);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -334,12 +373,7 @@ public class Model {
     public void removeShowing(int showingID) {
         Date date = new Date();
         Timestamp currentTimestamp = new Timestamp(date.getTime());
-        try {
-            dal.removeShowing(showingID);
-            allUpcomingShowings = dal.getUpcomingShows(currentTimestamp);
-        } catch (SQLException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dal.removeShowing(showingID);
     }
     
     /**
@@ -355,7 +389,6 @@ public class Model {
     public void createScreen(String name, int size, boolean imax, boolean threeD, boolean dbox, boolean xd) {
         try {
             dal.createScreen(name, size, imax, threeD, dbox, xd);
-            screens = dal.getAllScreens();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -366,15 +399,12 @@ public class Model {
      * @return
      */
     public ArrayList<Screen> getAllScreens() {
-        return screens;
-    }
-
-    /**
-     * Updates the screens model to reflect changes that may have been made
-     * by other connections.
-     */
-    void refreshScreens() {
-        this.screens = getAllScreens();
+        try {
+            return dal.getAllScreens();
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /**
@@ -385,10 +415,11 @@ public class Model {
     public void deleteScreen(int id) {
         try {
             dal.deleteScreen(id);
-            screens = dal.getAllScreens();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
 }
