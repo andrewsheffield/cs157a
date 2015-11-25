@@ -1,3 +1,4 @@
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,10 +31,10 @@ public class Sqlconnecttest {
      */
     public static void main(String[] args) {
 
-        cont.login("andrew@test.com", "password");
+        //cont.login("andrew@test.com", "password");
         //cont.updateUserInfo("Andrew", "Sheffield", "andrew@test.com");
         
-        System.out.println(model.getPurchasedTickets(2));
+        //System.out.println(model.getPurchasedTickets(2));
         
         
         //System.out.println(model.getUserSearchResults("sheff"));
@@ -42,11 +43,22 @@ public class Sqlconnecttest {
         
         //cont.createNewShowing(1, "tt2294629", currentTimestamp);
         //System.out.println(model.getUpcomingShows());
-        cont.purchaseTickets(1, 3);
+        //cont.purchaseTickets(1, 3);
         //cont.cancelTicket(1, 5);
         
         //System.out.println(model.getPurchasedTickets());
         //cont.sendTicketToFriend(2, 1, 1);
         //System.out.println(model.getUser());
+        
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    MainFrame frame = new MainFrame();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
