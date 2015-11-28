@@ -10,14 +10,14 @@ public class Showing {
     MovieAccess mal = new MovieAccess();
     
     int showingID;
-    int screenID;
+    Screen screen;
     String imdbID;
     Timestamp timestamp;
     Movie movie;
 
-    public Showing(int showingID, int screenID, String imdbID, Timestamp timestamp) {
+    public Showing(int showingID, Screen screen, String imdbID, Timestamp timestamp) {
         this.showingID = showingID;
-        this.screenID = screenID;
+        this.screen = screen;
         this.imdbID = imdbID;
         this.timestamp = timestamp;
         initMovie();
@@ -31,7 +31,7 @@ public class Showing {
     public String toString() {
         return "{" 
                 + "ShowingID:" + this.showingID
-                + ", ScreenID:" + this.screenID
+                + ", ScreenID:" + this.screen.id
                 + ", imdbID:" + this.imdbID
                 + ", Timestamp:" + this.timestamp
                 +"}";

@@ -31,12 +31,19 @@ public class Display extends JPanel {
 	private JCheckBox chckbxC;
 	private JCheckBox chckbxD;
 	private JLabel lblFilters;
+        private Controller cont;
 
 	/**
 	 * Create the panel.
 	 */
-	public Display() {
-		GridBagLayout gridBagLayout = new GridBagLayout();
+	public Display(Controller cont) {
+            this.cont = cont;
+            this.render();
+	}
+        
+        
+        public void render() {
+            GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -53,42 +60,39 @@ public class Display extends JPanel {
 		add(query, gbc_query);
 		query.setColumns(10);
 		
-		Object[] columnNames = {"test1", "test2", "test3","Quanitity","Buy"};
-		Object[][] data = {{"a", "b", "c", new Integer(0), new Boolean(true)},
-				{"e","f","g", new Integer(0), new Boolean(false)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"q","r","s", new Integer(0), new Boolean(true)},
-				{"a","c","e", new Integer(0), new Boolean(false)}};
+		Object[] columnNames = {"Movie Name", "Screen #", "Show Time", "IMAX", "3D", "XD", "DBOX", "Quanitity"};
+		Object[][] data = {};
+                
+                ArrayList<Showing> showings = cont.model.getUpcomingShows();
+                
+               
+                
 		DefaultTableModel model = new DefaultTableModel(data, columnNames){
 			
 		
 		  @Override
           public Class<?> getColumnClass(int columnIndex) {
-			  switch(columnIndex){
-			  case 3:
+			  switch(columnIndex) {
+			  case 7:
 				  return Integer.class;
-			  case 4:
-				  return Boolean.class;
-			  }
+                          }
 			  return String.class;
           }
 		   @Override
 		    public boolean isCellEditable(int row, int column) {
 		      switch(column){
-		      case 3:
-		    	  return column == 3;
-		      case 4:
-		    	  return column == 4;
+		      case 7:
+		    	  return column == 7;
 		      default:
 		    	  return false;
 		      }
 		    }
 		};
+                
+                 for (Showing s : showings) {
+                    Object[] showing = {s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
+                    model.addRow(showing);
+                }
 
 		scrollPane = new JScrollPane();
 		GridBagConstraints gbc_table = new GridBagConstraints();
@@ -106,11 +110,9 @@ public class Display extends JPanel {
 		table.setRowSorter(sort);
 		
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-		int columnIndexToSort = 3;
+		int columnIndexToSort = 2;
 		sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
 		 
-		int columnIndexToSort2 = 1;
-		sortKeys.add(new RowSorter.SortKey(columnIndexToSort2, SortOrder.DESCENDING));
 		sort.setSortKeys(sortKeys);
 		sort.sort();
 	
@@ -173,7 +175,7 @@ public class Display extends JPanel {
 		gbc_btnBuy.gridx = 9;
 		gbc_btnBuy.gridy = 3;
 		add(btnBuy, gbc_btnBuy);
-	}
+        }
 
 	
 	

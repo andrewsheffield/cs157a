@@ -413,41 +413,34 @@ public class DataAccess {
         }
     }
 
-    Showing createNewShowing(int screenID, String imdbID, Timestamp timestamp) throws SQLException {
+    public void createNewShowing(int screenID, String imdbID, Timestamp timestamp) throws SQLException {
         PreparedStatement pstmt = null;
         
         String newShowingQuery = "INSERT INTO showing(ScreenID, imdbID, startTimestamp) VALUES (?, ?, ?)";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
-            
-            //Create new user
-            pstmt = conn.prepareStatement(newShowingQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            pstmt = conn.prepareStatement(newShowingQuery);
             pstmt.setInt(1, screenID);
             pstmt.setString(2, imdbID);
             pstmt.setTimestamp(3, timestamp);
             pstmt.execute();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            rs.next();
-            Showing showing = new Showing(rs.getInt(1), screenID, imdbID, timestamp);
             
-            //Return the user that was created
-            return showing;
         }
         catch(SQLException e) {
             System.out.println(e);
-            return null;
         }
         finally {
             pstmt.close();
         }
     }
 
-    ArrayList<Showing> getUpcomingShows(Timestamp currentTimestamp) throws SQLException {
+    public ArrayList<Showing> getUpcomingShows(Timestamp currentTimestamp) throws SQLException {
         PreparedStatement pstmt = null;
         ArrayList<Showing> upcomingShows = new ArrayList();
         
-        String getShowingQuery = "SELECT * FROM showing WHERE startTimestamp>=? ORDER BY startTimestamp ASC";
+        String getShowingQuery = "SELECT * FROM showing,screen WHERE startTimestamp>=? AND showing.ScreenID=screen.ScreenID ORDER BY startTimestamp ASC";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
@@ -460,10 +453,18 @@ public class DataAccess {
             while (rs.next()) {
                 int showingID = rs.getInt("ShowingID");
                 int screenID = rs.getInt("ScreenID");
+                String screenName = rs.getString("Name");
+                int size = rs.getInt("Size");
                 String imdbID = rs.getString("imdbID");
                 Timestamp timestamp = rs.getTimestamp("startTimestamp");
+                boolean isIMAX = rs.getBoolean("IMAX");
+                boolean is3D = rs.getBoolean("3D");
+                boolean isXD = rs.getBoolean("XD");
+                boolean isDBOX = rs.getBoolean("DBOX");
                 
-                Showing showing = new Showing(showingID, screenID, imdbID, timestamp);
+                
+                Screen screen = new Screen(screenID, screenName, size, isIMAX, is3D, isXD, isDBOX);
+                Showing showing = new Showing(showingID, screen, imdbID, timestamp);
                 upcomingShows.add(showing);
             }
             
@@ -548,24 +549,35 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         ArrayList<Showing> showings = new ArrayList();
         
-        String getShowingsByimdbDB = "SELECT * FROM showing where imdbID=? AND startTimestamp>=?";
+        String getShowingQuery = "SELECT * FROM showing,screen WHERE imdbID=? AND showing.ScreenID=screen.ScreenID ORDER BY startTimestamp ASC";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
-            pstmt = conn.prepareStatement(getShowingsByimdbDB);
-            pstmt.setString(1, imdbID);
-            pstmt.setTimestamp(2, currentTimestamp);
+            
+            //Create new user
+            pstmt = conn.prepareStatement(getShowingQuery);
+            pstmt.setTimestamp(1, currentTimestamp);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
                 int showingID = rs.getInt("ShowingID");
                 int screenID = rs.getInt("ScreenID");
-                Timestamp startTime = rs.getTimestamp("startTimestamp");
+                String screenName = rs.getString("Name");
+                int size = rs.getInt("Size");
+                Timestamp timestamp = rs.getTimestamp("startTimestamp");
+                boolean isIMAX = rs.getBoolean("IMAX");
+                boolean is3D = rs.getBoolean("3D");
+                boolean isXD = rs.getBoolean("XD");
+                boolean isDBOX = rs.getBoolean("DBOX");
                 
-                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                
+                Screen screen = new Screen(screenID, screenName, size, isIMAX, is3D, isXD, isDBOX);
+                Showing showing = new Showing(showingID, screen, imdbID, timestamp);
                 showings.add(showing);
             }
             
+            
+            //Return the user that was created
             return showings;
         }
         catch(SQLException e) {
@@ -581,7 +593,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         ArrayList<Ticket> tickets = new ArrayList();
         
-        String getTicketsForUserQuery = "select * from ticket, showing where UserID=? AND ticket.ShowingID=showing.ShowingID";
+        String getTicketsForUserQuery = "select * from ticket, showing, screen where UserID=? AND ticket.ShowingID=showing.ShowingID AND showing.ScreenID=screen.ScreenID";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
@@ -590,15 +602,22 @@ public class DataAccess {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
+                
                 int showingID = rs.getInt("ShowingID");
                 int screenID = rs.getInt("ScreenID");
+                String screenName = rs.getString("Name");
+                int size = rs.getInt("Size");
                 String imdbID = rs.getString("imdbID");
+                Timestamp timestamp = rs.getTimestamp("startTimestamp");
+                boolean isIMAX = rs.getBoolean("IMAX");
+                boolean is3D = rs.getBoolean("3D");
+                boolean isXD = rs.getBoolean("XD");
+                boolean isDBOX = rs.getBoolean("DBOX");           
                 Timestamp startTime = rs.getTimestamp("startTimestamp");
                 Timestamp purchaseTime = rs.getTimestamp("ticket.updatedAt");
                 
-                
-                
-                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                Screen screen = new Screen(screenID, screenName, size, isIMAX, is3D, isXD, isDBOX);
+                Showing showing = new Showing(showingID, screen, imdbID, startTime);
                 Ticket ticket = new Ticket(showing, purchaseTime);
                 tickets.add(ticket);
             }
@@ -645,7 +664,7 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         ArrayList<Ticket> tickets = new ArrayList();
         
-        String getPurchaseHistoryQuery = "select * from ticket, showing where UserID=? AND ticket.ShowingID=showing.ShowingID AND showing.startTimestamp<?";
+        String getPurchaseHistoryQuery = "select * from ticket, showing, screen where UserID=? AND ticket.ShowingID=showing.ShowingID AND showing.ScreenID=screen.ScreenID AND showing.startTimestamp<?";
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
@@ -655,13 +674,21 @@ public class DataAccess {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
+                
                 int showingID = rs.getInt("ShowingID");
                 int screenID = rs.getInt("ScreenID");
+                String screenName = rs.getString("Name");
+                int size = rs.getInt("Size");
                 String imdbID = rs.getString("imdbID");
+                boolean isIMAX = rs.getBoolean("IMAX");
+                boolean is3D = rs.getBoolean("3D");
+                boolean isXD = rs.getBoolean("XD");
+                boolean isDBOX = rs.getBoolean("DBOX");           
                 Timestamp startTime = rs.getTimestamp("startTimestamp");
                 Timestamp purchaseTime = rs.getTimestamp("ticket.updatedAt");
                 
-                Showing showing = new Showing(showingID, screenID, imdbID, startTime);
+                Screen screen = new Screen(screenID, screenName, size, isIMAX, is3D, isXD, isDBOX);
+                Showing showing = new Showing(showingID, screen, imdbID, startTime);
                 Ticket ticket = new Ticket(showing, purchaseTime);
                 tickets.add(ticket);
             }
