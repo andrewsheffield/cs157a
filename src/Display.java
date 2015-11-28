@@ -43,6 +43,7 @@ public class Display extends JPanel {
         
         
         public void render() {
+            
             GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -60,10 +61,10 @@ public class Display extends JPanel {
 		add(query, gbc_query);
 		query.setColumns(10);
 		
-		Object[] columnNames = {"Movie Name", "Screen #", "Show Time", "IMAX", "3D", "XD", "DBOX", "Quanitity"};
+		Object[] columnNames = {"ID", "Movie Name", "Screen #", "Show Time", "IMAX", "3D", "XD", "DBOX", "Quanitity"};
 		Object[][] data = {};
                 
-                ArrayList<Showing> showings = cont.model.getUpcomingShows();
+
                 
                
                 
@@ -73,7 +74,7 @@ public class Display extends JPanel {
 		  @Override
           public Class<?> getColumnClass(int columnIndex) {
 			  switch(columnIndex) {
-			  case 7:
+			  case 8:
 				  return Integer.class;
                           }
 			  return String.class;
@@ -81,17 +82,28 @@ public class Display extends JPanel {
 		   @Override
 		    public boolean isCellEditable(int row, int column) {
 		      switch(column){
-		      case 7:
-		    	  return column == 7;
+		      case 8:
+		    	  return column == 8;
 		      default:
 		    	  return false;
 		      }
 		    }
 		};
                 
-                 for (Showing s : showings) {
-                    Object[] showing = {s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
-                    model.addRow(showing);
+                if (query.getText().isEmpty()) {
+                    ArrayList<Showing> showings = cont.model.getUpcomingShows();
+                    for (Showing s : showings) {
+                                            System.out.println(showings);
+
+                        Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
+                        model.addRow(showing);
+                    }   
+                } else {
+                    ArrayList<Showing> showings = cont.model.getShowingsByMovieTitle(query.getText());
+                    for (Showing s : showings) {
+                        Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
+                        model.addRow(showing);
+                    }   
                 }
 
 		scrollPane = new JScrollPane();
@@ -104,13 +116,14 @@ public class Display extends JPanel {
 		add(scrollPane, gbc_table);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
-
+                //TableColumn column = table.getColumnModel().getColumn(2);
+                
 		//create sorter
 		TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
 		table.setRowSorter(sort);
 		
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-		int columnIndexToSort = 2;
+		int columnIndexToSort = 0;
 		sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
 		 
 		sort.setSortKeys(sortKeys);
@@ -119,13 +132,35 @@ public class Display extends JPanel {
 		table.getTableHeader().setReorderingAllowed(false);
 		JButton btnSearch = new JButton("Search");
 		
-				GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-				gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
-				gbc_btnSearch.gridx = 9;
-				gbc_btnSearch.gridy = 0;
-				add(btnSearch, gbc_btnSearch);
+                GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+                gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
+                gbc_btnSearch.gridx = 9;
+                gbc_btnSearch.gridy = 0;
+                add(btnSearch, gbc_btnSearch);
+                
+                btnSearch.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        render();
+                    }
+                });
+                                
 		
 		btnBuy = new JButton("Buy");
+                
+                btnBuy.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        for (int i=0;i<model.getRowCount(); i++) {
+                            int showingID = (Integer) model.getValueAt(i, 0);
+                            int amount = (Integer) model.getValueAt(i, 8);
+                            System.out.println(showingID);
+                            System.out.println(amount);
+                            
+                            cont.purchaseTickets(showingID, 3);
+                        }
+                    }
+                });
 
 		
 		lblFilters = new JLabel("Filters:");

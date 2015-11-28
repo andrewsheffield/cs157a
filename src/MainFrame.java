@@ -29,7 +29,6 @@ public class MainFrame extends JFrame {
             MainMenu homePage = new MainMenu(cont);
 
             contentPane.add(login, "login");
-            System.out.println(login.btnCreateUser);
             login.btnCreateUser.addActionListener(new ActionListener(){
 
                     @Override

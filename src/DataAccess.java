@@ -556,7 +556,7 @@ public class DataAccess {
             
             //Create new user
             pstmt = conn.prepareStatement(getShowingQuery);
-            pstmt.setTimestamp(1, currentTimestamp);
+            pstmt.setString(1, imdbID);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {

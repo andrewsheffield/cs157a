@@ -49,4 +49,6 @@ END
 
 
 19. Notify user if friend is watching same movie
+select Distinct ShowingID, FriendID from friend, ticket WHERE friend.UserID=1 AND friendID=ticket.UserID;
 
+20. Trigger for first user is automatically admin

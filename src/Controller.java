@@ -97,14 +97,6 @@ public class Controller {
         model.addFriend(friendID);
     }
     
-    /** NEEDS IMPLEMENTATION
-     * Gets all the friends associated with the userid.
-     * @param userID
-     * @return an ArrayList of Users
-     */
-    public ArrayList<User> getFriends() {
-        return model.getFriends();
-    }
     
     /** NEEDS IMPLEMENATION
      * Takes a user id and friend id and removes the friend from the friend list.

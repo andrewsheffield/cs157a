@@ -67,6 +67,7 @@ public class Model {
     public ArrayList<Showing> getShowingsByMovieTitle(String movieTitle) {
         Movie movie = mal.getMovieByName(movieTitle);
         try {
+            System.out.println(movie);
             return dal.getShowingByimdbID(movie.imdbID);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
