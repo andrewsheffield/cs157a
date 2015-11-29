@@ -19,12 +19,15 @@ public class MainMenu extends JPanel {
 		Display movies = new Display(cont);
 		Friends friend = new Friends();
 		Profile profile = new Profile();
-		BoughtTickets tickets = new BoughtTickets();
+		AdminPanel admin = new AdminPanel(cont);
+                
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.add("Showing", movies);
-		tabbedPane.add("Friends", friend);
-		tabbedPane.add("Profile", profile);
-		tabbedPane.add("Future Events", tickets);
+		tabbedPane.add("Users", friend);
+		tabbedPane.add("Friends/Profile", profile);
+                if (cont.model.getUser().isAdmin) {
+                    tabbedPane.add("Admin", admin);
+                }
 		add(tabbedPane);
 		
 	}

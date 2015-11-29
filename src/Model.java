@@ -12,6 +12,9 @@ import java.util.logging.Logger;
  */
 public class Model {
     
+    public String showingSearchQuery = "";
+    public String userSearchString = "";
+    
     private User currentUser = null;
     private ArrayList<User> friends;
 
@@ -248,24 +251,26 @@ public class Model {
     /**
      * Searches for users in the user databse by a searchstring.  The search string
      * can contain any substring of first name, last name, first last name, or email.
-     * @param searchString
      * @return arraylist of users matching the search string
      */
-    public ArrayList<User> getUserSearchResults(String searchString) {
+    public ArrayList<User> getUserSearchResults() {
+        if (userSearchString.isEmpty()) {
+            return new ArrayList<>();
+        }
         try {
-            searchString = searchString.trim();
+            userSearchString = userSearchString.trim();
             
-            if (searchString.contains("@")) {
-                return dal.searchUserEmail(searchString);
+            if (userSearchString.contains("@")) {
+                return dal.searchUserEmail(userSearchString);
             }
-            else if (searchString.contains(" ")) {
-                String searchFirst = searchString.split(" ")[0];
-                String searchLast = searchString.split(" ")[1];
+            else if (userSearchString.contains(" ")) {
+                String searchFirst = userSearchString.split(" ")[0];
+                String searchLast = userSearchString.split(" ")[1];
                 
                 return dal.searchUserFirstAndLast(searchFirst, searchLast);
             }
             else {
-                return dal.searchUsersOneName(searchString);
+                return dal.searchUsersOneName(userSearchString);
             }
         }
         catch (SQLException e) {

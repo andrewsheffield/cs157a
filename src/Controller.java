@@ -171,4 +171,8 @@ public class Controller {
         model.deleteScreen(id);
     }
 
+    public void setUserSearch(String text) {
+        model.userSearchString = text;
+    }
+
 }

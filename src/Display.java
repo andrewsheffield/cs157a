@@ -25,6 +25,7 @@ public class Display extends JPanel {
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JButton btnBuy;
+        private JButton btnSearch;
 	private JCheckBox chckbxJ;
 	private JCheckBox chckbxA;
 	private JCheckBox chckbxB;
@@ -43,7 +44,8 @@ public class Display extends JPanel {
         
         
         public void render() {
-            
+            this.removeAll();
+            this.revalidate();
             GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -90,7 +92,7 @@ public class Display extends JPanel {
 		    }
 		};
                 
-                if (query.getText().isEmpty()) {
+                if (cont.model.showingSearchQuery.isEmpty()) {
                     ArrayList<Showing> showings = cont.model.getUpcomingShows();
                     for (Showing s : showings) {
                                             System.out.println(showings);
@@ -99,7 +101,7 @@ public class Display extends JPanel {
                         model.addRow(showing);
                     }   
                 } else {
-                    ArrayList<Showing> showings = cont.model.getShowingsByMovieTitle(query.getText());
+                    ArrayList<Showing> showings = cont.model.getShowingsByMovieTitle(cont.model.showingSearchQuery);
                     for (Showing s : showings) {
                         Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
                         model.addRow(showing);
@@ -123,14 +125,14 @@ public class Display extends JPanel {
 		table.setRowSorter(sort);
 		
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-		int columnIndexToSort = 0;
+		int columnIndexToSort = 1;
 		sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
 		 
 		sort.setSortKeys(sortKeys);
 		sort.sort();
 	
 		table.getTableHeader().setReorderingAllowed(false);
-		JButton btnSearch = new JButton("Search");
+		btnSearch = new JButton("Search");
 		
                 GridBagConstraints gbc_btnSearch = new GridBagConstraints();
                 gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
@@ -141,6 +143,7 @@ public class Display extends JPanel {
                 btnSearch.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        cont.model.showingSearchQuery = query.getText();
                         render();
                     }
                 });

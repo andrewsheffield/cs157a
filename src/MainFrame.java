@@ -26,7 +26,6 @@ public class MainFrame extends JFrame {
 
             Login login = new Login();
             CreateUser create = new CreateUser();
-            MainMenu homePage = new MainMenu(cont);
 
             contentPane.add(login, "login");
             login.btnCreateUser.addActionListener(new ActionListener(){
@@ -48,6 +47,8 @@ public class MainFrame extends JFrame {
                             // TODO Auto-generated method stub
                             login.login(cont);
                             if (cont.model.isLoggedIn()) {
+                                MainMenu homePage = new MainMenu(cont);
+                                contentPane.add(homePage, "home");
                                 CardLayout cl = (CardLayout) (contentPane.getLayout());
                                 cl.show(contentPane, "home");
                             } else {
@@ -76,6 +77,8 @@ public class MainFrame extends JFrame {
                     // TODO Auto-generated method stub
                     create.createUser(cont);
                     if (cont.model.isLoggedIn()) {
+                        MainMenu homePage = new MainMenu(cont);
+                        contentPane.add(homePage, "home");
                         CardLayout cl = (CardLayout) (contentPane.getLayout());
                         cl.show(contentPane, "home");
                     } else {
@@ -88,7 +91,7 @@ public class MainFrame extends JFrame {
 
 
 
-            contentPane.add(homePage, "home");
+            
 	}
 	
 }
