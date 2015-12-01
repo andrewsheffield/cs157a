@@ -26,7 +26,6 @@ public class Friends extends JPanel {
 	 */
 	public Friends(Controller cont) {
             this.cont = cont;
-            render();
 	}
         
         public void render()

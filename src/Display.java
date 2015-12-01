@@ -43,7 +43,6 @@ public class Display extends JPanel {
 	 */
 	public Display(Controller cont) {
             this.cont = cont;
-            this.render();
 	}
         
         

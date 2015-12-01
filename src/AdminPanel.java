@@ -25,7 +25,6 @@ public class AdminPanel extends JPanel {
     
     public AdminPanel(Controller cont) {
         this.cont = cont;
-        render();
     }
     
     public void render() {

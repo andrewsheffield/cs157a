@@ -23,14 +23,19 @@ public class Profile extends JPanel {
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane2;
-	//private Controller cont;
+	private Controller cont;
 	private JTable table_friends;
 	/**
 	 * Create the panel.
 	 */
 	public Profile(Controller cont) {
-		//this.cont = cont;
-		GridBagLayout gridBagLayout = new GridBagLayout();
+		this.cont = cont;
+	}
+        
+        public void render() {
+            this.removeAll();
+            this.revalidate();
+            GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 50, 54, 0, 0, 50, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
@@ -47,7 +52,7 @@ public class Profile extends JPanel {
                 switch(columnIndex) {
                     case 0:
                         return String.class;
-                    case 5:
+                    case 4:
                         return Boolean.class;
                 }
                 return String.class;
@@ -55,7 +60,7 @@ public class Profile extends JPanel {
             @Override
              public boolean isCellEditable(int row, int column) {
                switch(column){
-               case 5:
+               case 4:
                    return true;
                default:
                    return false;
@@ -93,7 +98,7 @@ public class Profile extends JPanel {
 		gbc_lblEmail.gridy = 1;
 		add(lblEmail, gbc_lblEmail);
 		
-		newEmail = new JTextField();
+		newEmail = new JTextField(cont.model.getUser().email);
 		GridBagConstraints gbc_newEmail = new GridBagConstraints();
 		gbc_newEmail.gridwidth = 3;
 		gbc_newEmail.insets = new Insets(0, 0, 5, 5);
@@ -111,7 +116,7 @@ public class Profile extends JPanel {
 		add(lblFirstName, gbc_lblFirstName);
 		
 		
-		newFName = new JTextField();
+		newFName = new JTextField(cont.model.getUser().fname);
 		GridBagConstraints gbc_newFName = new GridBagConstraints();
 		gbc_newFName.gridwidth = 3;
 		gbc_newFName.insets = new Insets(0, 0, 5, 5);
@@ -158,6 +163,28 @@ public class Profile extends JPanel {
 		gbc_btnUpdate.gridy = 4;
 		add(btnUpdate, gbc_btnUpdate);
                 
+                
+		
+		
+		
+				scrollPane = new JScrollPane();
+				GridBagConstraints gbc_table = new GridBagConstraints();
+				gbc_table.fill = GridBagConstraints.BOTH;
+				gbc_table.insets = new Insets(0, 0, 5, 0);
+				gbc_table.gridwidth = 12;
+				gbc_table.gridx = 1;
+				gbc_table.gridy = 5;
+				add(scrollPane, gbc_table);
+				table = new JTable(model);
+				scrollPane.setViewportView(table);
+				
+				JButton btnTableUpdate = new JButton("Update");
+				GridBagConstraints gbc_btnTableUpdate = new GridBagConstraints();
+				gbc_btnTableUpdate.insets = new Insets(0, 0, 0, 5);
+				gbc_btnTableUpdate.gridx = 11;
+				gbc_btnTableUpdate.gridy = 6;
+				add(btnTableUpdate, gbc_btnTableUpdate);
+                                
                 if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
                 table_friends.addMouseListener(new MouseListener() {
                     @Override
@@ -194,27 +221,6 @@ public class Profile extends JPanel {
                     public void mouseExited(MouseEvent e) {
                     }
                 });
-		
-		
-		
-				scrollPane = new JScrollPane();
-				GridBagConstraints gbc_table = new GridBagConstraints();
-				gbc_table.fill = GridBagConstraints.BOTH;
-				gbc_table.insets = new Insets(0, 0, 5, 0);
-				gbc_table.gridwidth = 12;
-				gbc_table.gridx = 1;
-				gbc_table.gridy = 5;
-				add(scrollPane, gbc_table);
-				table = new JTable(model);
-				scrollPane.setViewportView(table);
-				
-				JButton btnTableUpdate = new JButton("Table Update");
-				GridBagConstraints gbc_btnTableUpdate = new GridBagConstraints();
-				gbc_btnTableUpdate.insets = new Insets(0, 0, 0, 5);
-				gbc_btnTableUpdate.gridx = 11;
-				gbc_btnTableUpdate.gridy = 6;
-				add(btnTableUpdate, gbc_btnTableUpdate);
-
-	}
+        }
 
 }
