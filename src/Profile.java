@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -16,44 +18,60 @@ public class Profile extends JPanel {
 	private JTextField newLName;
 	private JTable table;
 	private JScrollPane scrollPane;
+	private JScrollPane scrollPane2;
+	private Controller cont;
+	private JTable table_friends;
 	/**
 	 * Create the panel.
 	 */
-	public Profile() {
+	public Profile(Controller cont) {
+		this.cont = cont;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 50, 0, 0, 50, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JLabel lblUsername = new JLabel("Username:");
-		GridBagConstraints gbc_lblUsername = new GridBagConstraints();
-		gbc_lblUsername.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUsername.gridx = 2;
-		gbc_lblUsername.gridy = 1;
-		add(lblUsername, gbc_lblUsername);
+		scrollPane2 = new JScrollPane();
+		table_friends = new JTable();
+		GridBagConstraints gbc_table_1 = new GridBagConstraints();
+		gbc_table_1.gridheight = 4;
+		gbc_table_1.insets = new Insets(0, 0, 5, 5);
+		gbc_table_1.fill = GridBagConstraints.BOTH;
+		gbc_table_1.gridx = 1;
+		gbc_table_1.gridy = 2;
+		add(scrollPane2, gbc_table_1);
+
 		
-		JLabel lblBlah = new JLabel("Blah");
-		GridBagConstraints gbc_lblBlah = new GridBagConstraints();
-		gbc_lblBlah.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBlah.gridx = 6;
-		gbc_lblBlah.gridy = 1;
-		add(lblBlah, gbc_lblBlah);
+		Object[] columnN = {"FriendsID", "Email", "First Name", "Last Name"};
+		Object[][] data1 = {};
+		DefaultTableModel model1 = new DefaultTableModel(data1, columnN);
+		if(!cont.model.getFriends().isEmpty()){
+			ArrayList<User> friends = cont.model.getFriends();
+			for (User s : friends) {
+	
+				Object[] person = {s.id, s.email, s.fname, s.lname};
+				model1.addRow(person);
+			}  
+		}
 		
+		table_friends = new JTable(model1);
+		scrollPane.setViewportView(table_friends);
+				
 		JLabel lblEmail = new JLabel("Email:");
 		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
 		gbc_lblEmail.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEmail.gridx = 2;
+		gbc_lblEmail.gridx = 4;
 		gbc_lblEmail.gridy = 2;
 		add(lblEmail, gbc_lblEmail);
 		
-		JLabel lblBlah_1 = new JLabel("Blah");
-		GridBagConstraints gbc_lblBlah_1 = new GridBagConstraints();
-		gbc_lblBlah_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBlah_1.gridx = 6;
-		gbc_lblBlah_1.gridy = 2;
-		add(lblBlah_1, gbc_lblBlah_1);
+		JLabel lblEmailR = new JLabel(cont.model.getUser().email);
+		GridBagConstraints gbc_lblEmailR = new GridBagConstraints();
+		gbc_lblEmailR.insets = new Insets(0, 0, 5, 5);
+		gbc_lblEmailR.gridx = 6;
+		gbc_lblEmailR.gridy = 2;
+		add(lblEmailR, gbc_lblEmailR);
 		
 		newEmail = new JTextField();
 		GridBagConstraints gbc_newEmail = new GridBagConstraints();
@@ -67,16 +85,16 @@ public class Profile extends JPanel {
 		JLabel lblFirstName = new JLabel("First Name:");
 		GridBagConstraints gbc_lblFirstName = new GridBagConstraints();
 		gbc_lblFirstName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFirstName.gridx = 2;
+		gbc_lblFirstName.gridx = 4;
 		gbc_lblFirstName.gridy = 3;
 		add(lblFirstName, gbc_lblFirstName);
 		
-		JLabel lblBlah_2 = new JLabel("Blah");
-		GridBagConstraints gbc_lblBlah_2 = new GridBagConstraints();
-		gbc_lblBlah_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBlah_2.gridx = 6;
-		gbc_lblBlah_2.gridy = 3;
-		add(lblBlah_2, gbc_lblBlah_2);
+		JLabel lblFName = new JLabel(cont.model.getUser().fname);
+		GridBagConstraints gbc_lblFName = new GridBagConstraints();
+		gbc_lblFName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFName.gridx = 6;
+		gbc_lblFName.gridy = 3;
+		add(lblFName, gbc_lblFName);
 		
 		newFName = new JTextField();
 		GridBagConstraints gbc_newFName = new GridBagConstraints();
@@ -90,16 +108,16 @@ public class Profile extends JPanel {
 		JLabel lblLastName = new JLabel("Last Name:");
 		GridBagConstraints gbc_lblLastName = new GridBagConstraints();
 		gbc_lblLastName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblLastName.gridx = 2;
+		gbc_lblLastName.gridx = 4;
 		gbc_lblLastName.gridy = 4;
 		add(lblLastName, gbc_lblLastName);
 		
-		JLabel lblBlah_3 = new JLabel("Blah");
-		GridBagConstraints gbc_lblBlah_3 = new GridBagConstraints();
-		gbc_lblBlah_3.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBlah_3.gridx = 6;
-		gbc_lblBlah_3.gridy = 4;
-		add(lblBlah_3, gbc_lblBlah_3);
+		JLabel lblLName = new JLabel(cont.model.getUser().lname);
+		GridBagConstraints gbc_lblLName = new GridBagConstraints();
+		gbc_lblLName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLName.gridx = 6;
+		gbc_lblLName.gridy = 4;
+		add(lblLName, gbc_lblLName);
 		
 		newLName = new JTextField();
 		GridBagConstraints gbc_newLName = new GridBagConstraints();
@@ -117,17 +135,8 @@ public class Profile extends JPanel {
 		gbc_btnUpdate.gridy = 5;
 		add(btnUpdate, gbc_btnUpdate);
 		
-		Object[] columnNames = {"test1", "test2", "test3"};
-		Object[][] data = {{"a", "b", "c"},
-				{"e","f","g"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"q","r","s"},
-				{"a","c","e"}};
+		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Remove"};
+		Object[][] data = {};
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
 		scrollPane = new JScrollPane();

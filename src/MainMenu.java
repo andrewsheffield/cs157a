@@ -18,7 +18,7 @@ public class MainMenu extends JPanel {
 		setLayout(new GridLayout(1,1));
 		Display movies = new Display(cont);
 		Friends friend = new Friends();
-		Profile profile = new Profile();
+		Profile profile = new Profile(cont);
 		AdminPanel admin = new AdminPanel(cont);
                 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
