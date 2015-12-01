@@ -147,6 +147,17 @@ public class Profile extends JPanel {
 		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Quantity",};
 		Object[][] data = {};
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		if(cont.model.getPurchasedTickets() != null)
+		{
+			ArrayList<Ticket> tickets = cont.model.getPurchasedTickets();
+			for(Ticket ticket: tickets)
+			{
+				Object[] ticketData = {ticket.showing.showingID, ticket.showing.movie.title, ticket.showing.screen.id,
+						ticket.purchaseTimestamp, new Integer(1), new Integer(0)};
+				model.addRow(ticketData);
+				
+			}
+		}
 		table = new JTable();
 		
 		JButton btnDeleteFriend = new JButton("Delete Friend");
