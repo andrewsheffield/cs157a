@@ -144,7 +144,7 @@ public class Profile extends JPanel {
 		add(newLName, gbc_newLName);
 		newLName.setColumns(10);
 		
-		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Quantity",};
+		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Quantity", "Send to Friend"};
 		Object[][] data = {};
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
 		if(cont.model.getPurchasedTickets() != null)
