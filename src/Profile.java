@@ -44,7 +44,7 @@ public class Profile extends JPanel {
 		table_friends = new JTable();
 
 		
-		Object[] columnN = {"FriendsID", "Email", "First Name", "Last Name", "Remove"};
+		Object[] columnN = {"FriendsID", "Email", "First Name", "Last Name"};
 		Object[][] data1 = {};
 		DefaultTableModel model1 = new DefaultTableModel(data1, columnN){
             @Override
@@ -72,7 +72,7 @@ public class Profile extends JPanel {
                         friends.add(0, cont.model.getUser());
 			for (User s : friends) {
 	
-				Object[] person = {s.id, s.email, s.fname, s.lname,new Boolean(false) };
+				Object[] person = {s.id, s.email, s.fname, s.lname};
 				model1.addRow(person);
 			}  
 		}
