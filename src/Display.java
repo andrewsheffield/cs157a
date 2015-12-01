@@ -98,7 +98,6 @@ public class Display extends JPanel {
 	                if (cont.model.showingSearchQuery.isEmpty()) {
 	                    ArrayList<Showing> showings = cont.model.getUpcomingShows();
 	                    for (Showing s : showings) {
-	                                            System.out.println(showings);
 	
 	                        Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
 	                        model.addRow(showing);
@@ -183,10 +182,9 @@ public class Display extends JPanel {
 	                        for (int i=0;i<model.getRowCount(); i++) {
 	                            int showingID = (Integer) model.getValueAt(i, 0);
 	                            int amount = (Integer) model.getValueAt(i, 8);
-	                            System.out.println(showingID);
-	                            System.out.println(amount);
 	                            
-	                            cont.purchaseTickets(showingID, 3);
+	                            cont.purchaseTickets(showingID, amount);
+                                    cont.model.view.render();
 	                        }
 	                    }
 	                });

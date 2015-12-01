@@ -48,6 +48,7 @@ public class MainFrame extends JFrame {
                             login.login(cont);
                             if (cont.model.isLoggedIn()) {
                                 MainMenu homePage = new MainMenu(cont);
+                                cont.model.view = homePage;
                                 contentPane.add(homePage, "home");
                                 CardLayout cl = (CardLayout) (contentPane.getLayout());
                                 cl.show(contentPane, "home");
@@ -78,6 +79,7 @@ public class MainFrame extends JFrame {
                     create.createUser(cont);
                     if (cont.model.isLoggedIn()) {
                         MainMenu homePage = new MainMenu(cont);
+                        cont.model.view = homePage;
                         contentPane.add(homePage, "home");
                         CardLayout cl = (CardLayout) (contentPane.getLayout());
                         cl.show(contentPane, "home");

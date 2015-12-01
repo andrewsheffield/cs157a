@@ -28,6 +28,8 @@ public class AdminPanel extends JPanel {
     }
     
     public void render() {
+        this.removeAll();
+        this.revalidate();
         setLayout(new GridLayout(1,1));
         
 		AdminUserPanel adminUser = new AdminUserPanel(cont);

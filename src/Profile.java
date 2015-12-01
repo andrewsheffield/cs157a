@@ -200,6 +200,10 @@ public class Profile extends JPanel {
                 table_friends.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        int selected = table_friends.getSelectedRow();
+                        newEmail.setText((String) model1.getValueAt(selected, 1));
+                        newFName.setText((String) model1.getValueAt(selected, 2));
+                        newLName.setText((String) model1.getValueAt(selected, 3));
                         if (table_friends.isRowSelected(0)) {
                             btnDeleteFriend.setEnabled(false);
                             btnUpdate.setEnabled(true);

@@ -22,6 +22,7 @@ public class Model {
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
     private final MovieAccess mal = new MovieAccess();
+    MainMenu view;
     
 
     public boolean isLoggedIn() {
@@ -373,7 +374,11 @@ public class Model {
     public void removeShowing(int showingID) {
         Date date = new Date();
         Timestamp currentTimestamp = new Timestamp(date.getTime());
-        dal.removeShowing(showingID);
+        try {
+            dal.removeShowing(showingID);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**

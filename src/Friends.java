@@ -139,6 +139,7 @@ public class Friends extends JPanel {
                         int id = (Integer) data.getValueAt(i, 0);
                         if (addFriendBool) {
                             cont.addFriend(id);
+                            cont.model.view.render();
                         }
                     }
                 }
