@@ -80,6 +80,7 @@ public class Friends extends JPanel {
             //Search Results
             ArrayList<User> usersResult = cont.model.getUserSearchResults();
             
+            
             JScrollPane userScrollPane = new JScrollPane();
             
             String[] userColumnNames = {"ID", "First Name", "Last Name", "Email", "Add Friend"};

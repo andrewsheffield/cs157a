@@ -60,6 +60,7 @@ public class Profile extends JPanel {
         };
 		if(cont.model.getFriends() != null){
 			ArrayList<User> friends = cont.model.getFriends();
+                        friends.add(0, cont.model.getUser());
 			for (User s : friends) {
 	
 				Object[] person = {s.id, s.email, s.fname, s.lname,new Boolean(false) };
