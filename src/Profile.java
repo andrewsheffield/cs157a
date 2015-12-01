@@ -57,7 +57,7 @@ public class Profile extends JPanel {
 		}
 		
 		table_friends = new JTable(model1);
-		scrollPane.setViewportView(table_friends);
+		scrollPane2.setViewportView(table_friends);
 				
 		JLabel lblEmail = new JLabel("Email:");
 		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
