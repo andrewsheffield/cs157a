@@ -167,12 +167,31 @@ public class Profile extends JPanel {
 		gbc_btnDeleteFriend.gridy = 4;
 		add(btnDeleteFriend, gbc_btnDeleteFriend);
                 
+                JButton btnUpdate = new JButton("Update");
+		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
+		gbc_btnUpdate.gridx = 11;
+		gbc_btnUpdate.gridy = 4;
+		add(btnUpdate, gbc_btnUpdate);
+                
                 if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
                 table_friends.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
-                        else btnDeleteFriend.setEnabled(true);
+                        if (table_friends.isRowSelected(0)) {
+                            btnDeleteFriend.setEnabled(false);
+                            btnUpdate.setEnabled(true);
+                            newEmail.setEditable(true);
+                            newFName.setEditable(true);
+                            newLName.setEditable(true);
+                        }
+                        else {
+                            btnDeleteFriend.setEnabled(true);
+                            btnUpdate.setEnabled(false);
+                            newEmail.setEditable(false);
+                            newFName.setEditable(false);
+                            newLName.setEditable(false);
+                        }
                     }
 
                     @Override
@@ -192,12 +211,7 @@ public class Profile extends JPanel {
                     }
                 });
 		
-		JButton btnUpdate = new JButton("Update");
-		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
-		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
-		gbc_btnUpdate.gridx = 11;
-		gbc_btnUpdate.gridy = 4;
-		add(btnUpdate, gbc_btnUpdate);
+		
 		
 				scrollPane = new JScrollPane();
 				GridBagConstraints gbc_table = new GridBagConstraints();
