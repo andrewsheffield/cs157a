@@ -17,7 +17,7 @@ public class MainMenu extends JPanel {
 	public MainMenu(Controller cont) {
 		setLayout(new GridLayout(1,1));
 		Display movies = new Display(cont);
-		Friends friend = new Friends();
+		Friends friend = new Friends(cont);
 		Profile profile = new Profile(cont);
 		AdminPanel admin = new AdminPanel(cont);
                 

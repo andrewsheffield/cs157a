@@ -7,6 +7,11 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 public class Friends extends JPanel {
 	private JTextField friendID;
@@ -14,108 +19,129 @@ public class Friends extends JPanel {
 	private JTextField movieID;
 	private JTextField giveFriendID;
 
+        private Controller cont;
+        
 	/**
 	 * Create the panel.
 	 */
-	public Friends() {
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 40, 0, 0, 32, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		setLayout(gridBagLayout);
-		
-		JLabel lblAddFriend = new JLabel("Add Friend");
-		GridBagConstraints gbc_lblAddFriend = new GridBagConstraints();
-		gbc_lblAddFriend.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAddFriend.gridx = 1;
-		gbc_lblAddFriend.gridy = 1;
-		add(lblAddFriend, gbc_lblAddFriend);
-		
-		friendID = new JTextField();
-		GridBagConstraints gbc_friendID = new GridBagConstraints();
-		gbc_friendID.fill = GridBagConstraints.HORIZONTAL;
-		gbc_friendID.insets = new Insets(0, 0, 5, 5);
-		gbc_friendID.gridx = 3;
-		gbc_friendID.gridy = 1;
-		add(friendID, gbc_friendID);
-		friendID.setColumns(10);
-		
-		JButton btnAdd = new JButton("Add");
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAdd.gridx = 5;
-		gbc_btnAdd.gridy = 1;
-		add(btnAdd, gbc_btnAdd);
-		
-		JLabel lblSearchFriend = new JLabel("Search User");
-		GridBagConstraints gbc_lblSearchFriend = new GridBagConstraints();
-		gbc_lblSearchFriend.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSearchFriend.gridx = 1;
-		gbc_lblSearchFriend.gridy = 4;
-		add(lblSearchFriend, gbc_lblSearchFriend);
-		
-		txtSearchfriendid = new JTextField();
-		GridBagConstraints gbc_txtSearchfriendid = new GridBagConstraints();
-		gbc_txtSearchfriendid.insets = new Insets(0, 0, 5, 5);
-		gbc_txtSearchfriendid.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtSearchfriendid.gridx = 3;
-		gbc_txtSearchfriendid.gridy = 4;
-		add(txtSearchfriendid, gbc_txtSearchfriendid);
-		txtSearchfriendid.setColumns(10);
-		
-		JButton btnFind = new JButton("Find");
-		GridBagConstraints gbc_btnFind = new GridBagConstraints();
-		gbc_btnFind.insets = new Insets(0, 0, 5, 0);
-		gbc_btnFind.gridx = 5;
-		gbc_btnFind.gridy = 4;
-		add(btnFind, gbc_btnFind);
-		
-		JLabel lblGiveAFriend = new JLabel("Give a Friend a Ticket");
-		GridBagConstraints gbc_lblGiveAFriend = new GridBagConstraints();
-		gbc_lblGiveAFriend.insets = new Insets(0, 0, 5, 5);
-		gbc_lblGiveAFriend.gridx = 1;
-		gbc_lblGiveAFriend.gridy = 6;
-		add(lblGiveAFriend, gbc_lblGiveAFriend);
-		
-		JLabel lblMovieid = new JLabel("MovieID");
-		GridBagConstraints gbc_lblMovieid = new GridBagConstraints();
-		gbc_lblMovieid.insets = new Insets(0, 0, 5, 5);
-		gbc_lblMovieid.gridx = 1;
-		gbc_lblMovieid.gridy = 7;
-		add(lblMovieid, gbc_lblMovieid);
-		
-		movieID = new JTextField();
-		GridBagConstraints gbc_movieID = new GridBagConstraints();
-		gbc_movieID.insets = new Insets(0, 0, 5, 5);
-		gbc_movieID.fill = GridBagConstraints.HORIZONTAL;
-		gbc_movieID.gridx = 3;
-		gbc_movieID.gridy = 7;
-		add(movieID, gbc_movieID);
-		movieID.setColumns(10);
-		
-		JLabel lblFriendid = new JLabel("FriendID");
-		GridBagConstraints gbc_lblFriendid = new GridBagConstraints();
-		gbc_lblFriendid.insets = new Insets(0, 0, 0, 5);
-		gbc_lblFriendid.gridx = 1;
-		gbc_lblFriendid.gridy = 8;
-		add(lblFriendid, gbc_lblFriendid);
-		
-		giveFriendID = new JTextField();
-		GridBagConstraints gbc_giveFriendID = new GridBagConstraints();
-		gbc_giveFriendID.insets = new Insets(0, 0, 0, 5);
-		gbc_giveFriendID.fill = GridBagConstraints.BOTH;
-		gbc_giveFriendID.gridx = 3;
-		gbc_giveFriendID.gridy = 8;
-		add(giveFriendID, gbc_giveFriendID);
-		giveFriendID.setColumns(10);
-		
-		JButton btnGive = new JButton("Give");
-		GridBagConstraints gbc_btnGive = new GridBagConstraints();
-		gbc_btnGive.gridx = 5;
-		gbc_btnGive.gridy = 8;
-		add(btnGive, gbc_btnGive);
-
+	public Friends(Controller cont) {
+            this.cont = cont;
+            render();
 	}
+        
+        public void render()
+        {
+            this.removeAll();
+            this.revalidate();
 
+            int y = 0;
+
+            GridBagLayout layout = new GridBagLayout();
+            layout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            layout.rowHeights = new int[]{0, 0, 0, 0, 0};
+            layout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+            layout.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+            setLayout(layout);
+        
+        //USER SEARCH AND SET ADMIN
+            //USER SEARCH FIELD AND BUTTON
+            JLabel searchUserLabel = new JLabel("Search Users to add as Friend:");
+            GridBagConstraints gbc_searchUserLabel = new GridBagConstraints();
+            gbc_searchUserLabel.insets = new Insets(0, 0, 5, 5);
+            gbc_searchUserLabel.gridx = 0;
+            gbc_searchUserLabel.gridy = y;
+            add(searchUserLabel, gbc_searchUserLabel);
+            
+            JTextField searchUserField = new JTextField();
+            GridBagConstraints gbc_searchUserField = new GridBagConstraints();
+            gbc_searchUserField.insets = new Insets(0, 0, 5, 5);
+            gbc_searchUserField.fill = GridBagConstraints.HORIZONTAL;
+            gbc_searchUserField.gridx = 0;
+            y++;
+            gbc_searchUserField.gridy = y;
+            searchUserField.setColumns(10);
+            add(searchUserField, gbc_searchUserField);
+            
+            JButton searchUserButton = new JButton("Search");
+            GridBagConstraints gbc_searchUserButton = new GridBagConstraints();
+            gbc_searchUserButton.insets = new Insets(0, 0, 5, 5);
+            gbc_searchUserButton.gridx = 1;
+            gbc_searchUserButton.gridy = y;
+            add(searchUserButton, gbc_searchUserButton);
+            
+            searchUserButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    cont.setUserSearch(searchUserField.getText());
+                    render();
+                }
+            });
+            
+            //Search Results
+            ArrayList<User> usersResult = cont.model.getUserSearchResults();
+            
+            JScrollPane userScrollPane = new JScrollPane();
+            
+            String[] userColumnNames = {"ID", "First Name", "Last Name", "Email", "Add Friend"};
+            Object[][] userData = {};
+            
+            DefaultTableModel userModel = new DefaultTableModel(userData, userColumnNames){
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    switch(columnIndex) {
+                        case 0:
+                            return String.class;
+                        case 4:
+                            return Boolean.class;
+                    }
+                    return String.class;
+                }
+                @Override
+                 public boolean isCellEditable(int row, int column) {
+                   switch(column){
+                   case 4:
+                       return true;
+                   default:
+                       return false;
+                   }
+                 }
+            };
+            for (User u : usersResult) {
+                Object[] userArray = {u.id, u.fname, u.lname, u.email, new Boolean(false)};
+                userModel.addRow(userArray);
+            }
+            GridBagConstraints gbc_userScrollPane = new GridBagConstraints();
+            gbc_userScrollPane.insets = new Insets(0, 0, 5, 0);
+            gbc_userScrollPane.gridwidth = 10;
+            gbc_userScrollPane.fill = GridBagConstraints.BOTH;
+            gbc_userScrollPane.gridx = 0;
+            y++;
+            gbc_userScrollPane.gridy = y;
+            JTable table = new JTable(userModel);
+            userScrollPane.setViewportView(table);
+            add(userScrollPane, gbc_userScrollPane);
+            
+            JButton updateIsAdmin = new JButton("Update");
+            GridBagConstraints gbc_updateIsAdmin = new GridBagConstraints();
+            gbc_updateIsAdmin.insets = new Insets(0, 0, 5, 5);
+            gbc_updateIsAdmin.gridx = 1;
+            y++;
+            gbc_updateIsAdmin.gridy = y;
+            add(updateIsAdmin, gbc_updateIsAdmin);
+            
+            updateIsAdmin.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    TableModel data = table.getModel();
+                    int rows = data.getRowCount();
+                    for (int i=0;i<rows;i++) {
+                        boolean addFriendBool = (Boolean) data.getValueAt(i, 4);
+                        int id = (Integer) data.getValueAt(i, 0);
+                        if (addFriendBool) {
+                            cont.addFriend(id);
+                        }
+                    }
+                }
+            });
+        }
 }

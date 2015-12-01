@@ -38,7 +38,7 @@ public class Profile extends JPanel {
 		Object[] columnN = {"FriendsID", "Email", "First Name", "Last Name"};
 		Object[][] data1 = {};
 		DefaultTableModel model1 = new DefaultTableModel(data1, columnN);
-		if(!cont.model.getFriends().isEmpty()){
+		if(cont.model.getFriends() != null){
 			ArrayList<User> friends = cont.model.getFriends();
 			for (User s : friends) {
 	

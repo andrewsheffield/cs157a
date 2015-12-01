@@ -519,9 +519,8 @@ public class DataAccess {
                 String fname = rs.getString("FirstName");
                 String lname = rs.getString("LastName");
                 String email = rs.getString("Email");
-                boolean isAdmin = rs.getBoolean("isAdmin");
                 
-                User friend = new User(friendID, fname, lname, email, isAdmin);
+                User friend = new User(friendID, fname, lname, email, false);
                 friends.add(friend);
             }
             
