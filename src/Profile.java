@@ -33,7 +33,7 @@ public class Profile extends JPanel {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 50, 54, 0, 0, 50, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		table_friends = new JTable();
@@ -93,18 +93,12 @@ public class Profile extends JPanel {
 		gbc_lblEmail.gridy = 1;
 		add(lblEmail, gbc_lblEmail);
 		
-		JLabel lblEmailR = new JLabel(cont.model.getUser().email);
-		GridBagConstraints gbc_lblEmailR = new GridBagConstraints();
-		gbc_lblEmailR.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEmailR.gridx = 9;
-		gbc_lblEmailR.gridy = 1;
-		add(lblEmailR, gbc_lblEmailR);
-		
 		newEmail = new JTextField();
 		GridBagConstraints gbc_newEmail = new GridBagConstraints();
+		gbc_newEmail.gridwidth = 3;
 		gbc_newEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_newEmail.fill = GridBagConstraints.HORIZONTAL;
-		gbc_newEmail.gridx = 11;
+		gbc_newEmail.gridx = 9;
 		gbc_newEmail.gridy = 1;
 		add(newEmail, gbc_newEmail);
 		newEmail.setColumns(10);
@@ -116,18 +110,13 @@ public class Profile extends JPanel {
 		gbc_lblFirstName.gridy = 2;
 		add(lblFirstName, gbc_lblFirstName);
 		
-		JLabel lblFName = new JLabel(cont.model.getUser().fname);
-		GridBagConstraints gbc_lblFName = new GridBagConstraints();
-		gbc_lblFName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFName.gridx = 9;
-		gbc_lblFName.gridy = 2;
-		add(lblFName, gbc_lblFName);
 		
 		newFName = new JTextField();
 		GridBagConstraints gbc_newFName = new GridBagConstraints();
+		gbc_newFName.gridwidth = 3;
 		gbc_newFName.insets = new Insets(0, 0, 5, 5);
 		gbc_newFName.fill = GridBagConstraints.HORIZONTAL;
-		gbc_newFName.gridx = 11;
+		gbc_newFName.gridx = 9;
 		gbc_newFName.gridy = 2;
 		add(newFName, gbc_newFName);
 		newFName.setColumns(10);
@@ -139,18 +128,13 @@ public class Profile extends JPanel {
 		gbc_lblLastName.gridy = 3;
 		add(lblLastName, gbc_lblLastName);
 		
-		JLabel lblLName = new JLabel(cont.model.getUser().lname);
-		GridBagConstraints gbc_lblLName = new GridBagConstraints();
-		gbc_lblLName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblLName.gridx = 9;
-		gbc_lblLName.gridy = 3;
-		add(lblLName, gbc_lblLName);
-		
+
 		newLName = new JTextField(cont.model.getUser().lname);
 		GridBagConstraints gbc_newLName = new GridBagConstraints();
+		gbc_newLName.gridwidth = 3;
 		gbc_newLName.insets = new Insets(0, 0, 5, 5);
 		gbc_newLName.fill = GridBagConstraints.HORIZONTAL;
-		gbc_newLName.gridx = 11;
+		gbc_newLName.gridx = 9;
 		gbc_newLName.gridy = 3;
 		add(newLName, gbc_newLName);
 		newLName.setColumns(10);
