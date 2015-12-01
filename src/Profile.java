@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -166,6 +168,16 @@ public class Profile extends JPanel {
 		gbc_btnDeleteFriend.gridx = 7;
 		gbc_btnDeleteFriend.gridy = 4;
 		add(btnDeleteFriend, gbc_btnDeleteFriend);
+                
+                btnDeleteFriend.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int selected = table_friends.getSelectedRow();
+                        int friendID = (Integer) model1.getValueAt(selected, 0);
+                        cont.removeFriend(friendID);
+                        cont.model.view.render();
+                    }
+                });
                 
                 JButton btnUpdate = new JButton("Update");
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
