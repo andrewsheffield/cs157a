@@ -19,29 +19,20 @@ public class Profile extends JPanel {
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane2;
-	private Controller cont;
+	//private Controller cont;
 	private JTable table_friends;
 	/**
 	 * Create the panel.
 	 */
 	public Profile(Controller cont) {
-		this.cont = cont;
+		//this.cont = cont;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 50, 0, 0, 50, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
-		
-		scrollPane2 = new JScrollPane();
 		table_friends = new JTable();
-		GridBagConstraints gbc_table_1 = new GridBagConstraints();
-		gbc_table_1.gridheight = 4;
-		gbc_table_1.insets = new Insets(0, 0, 5, 5);
-		gbc_table_1.fill = GridBagConstraints.BOTH;
-		gbc_table_1.gridx = 1;
-		gbc_table_1.gridy = 2;
-		add(scrollPane2, gbc_table_1);
 
 		
 		Object[] columnN = {"FriendsID", "Email", "First Name", "Last Name"};
@@ -55,6 +46,15 @@ public class Profile extends JPanel {
 				model1.addRow(person);
 			}  
 		}
+		
+		scrollPane2 = new JScrollPane();
+		GridBagConstraints gbc_table_1 = new GridBagConstraints();
+		gbc_table_1.gridheight = 4;
+		gbc_table_1.insets = new Insets(0, 0, 5, 5);
+		gbc_table_1.fill = GridBagConstraints.BOTH;
+		gbc_table_1.gridx = 1;
+		gbc_table_1.gridy = 1;
+		add(scrollPane2, gbc_table_1);
 		
 		table_friends = new JTable(model1);
 		scrollPane2.setViewportView(table_friends);
@@ -135,7 +135,7 @@ public class Profile extends JPanel {
 		gbc_btnUpdate.gridy = 5;
 		add(btnUpdate, gbc_btnUpdate);
 		
-		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Remove"};
+		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Quantity",};
 		Object[][] data = {};
 		DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
