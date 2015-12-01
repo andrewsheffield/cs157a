@@ -187,6 +187,22 @@ DELETE FROM friend WHERE old.UserID = FriendID;
 END //
 DELIMITER ;
 
+
+-- -----------------------------------------------------
+-- Trigger set the first user as admin
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS setFirstAdmin;
+
+DELIMITER //
+CREATE TRIGGER setFirstAdmin
+BEFORE INSERT ON user FOR EACH ROW
+BEGIN
+  IF ((SELECT count(*) FROM user) = 0) THEN
+        SET new.isAdmin = 1;
+  END IF;
+END //
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- Procedure getAllUsers()
 -- -----------------------------------------------------

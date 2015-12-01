@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
 public class Profile extends JPanel {
 	private JTextField newEmail;
@@ -186,7 +187,16 @@ public class Profile extends JPanel {
 		gbc_btnUpdate.gridy = 4;
 		add(btnUpdate, gbc_btnUpdate);
                 
-                
+                btnUpdate.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String email = newEmail.getText();
+                        String fName = newFName.getText();
+                        String lname = newLName.getText();
+                        cont.updateUserInfo(fName, lname, email);
+                        cont.model.view.render();
+                    }
+                });
 		
 		
 		
@@ -207,6 +217,20 @@ public class Profile extends JPanel {
 				gbc_btnTableUpdate.gridx = 11;
 				gbc_btnTableUpdate.gridy = 6;
 				add(btnTableUpdate, gbc_btnTableUpdate);
+                                
+                                btnTableUpdate.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        int rowCount = table.getRowCount();
+                                        TableModel data = table.getModel();
+                                        for (int i=0;i<rowCount;i++) {
+                                            int id = (Integer) data.getValueAt(i, 0);
+                                            int updatedQuantity = (Integer) data.getValueAt(i, 4);
+                                            int sendToFriendQuant = (Integer) data.getValueAt(i, 5);
+                                            System.out.println("Profile.java:" + Thread.currentThread().getStackTrace()[2].getLineNumber() + " finish this by updating ticket view with a quantity");
+                                        }
+                                    }
+                                });
                                 
                 if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
                 table_friends.addMouseListener(new MouseListener() {

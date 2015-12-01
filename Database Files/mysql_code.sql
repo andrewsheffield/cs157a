@@ -52,3 +52,16 @@ END
 select Distinct ShowingID, FriendID from friend, ticket WHERE friend.UserID=1 AND friendID=ticket.UserID;
 
 20. Trigger for first user is automatically admin
+
+DROP TRIGGER IF EXISTS setFirstAdmin;
+
+DELIMITER //
+CREATE TRIGGER setFirstAdmin
+BEFORE INSERT ON user FOR EACH ROW
+BEGIN
+	IF ((SELECT count(*) FROM user) = 0) THEN
+        SET new.isAdmin = 1;
+  END IF;
+END;
+//
+DELIMITER ;
