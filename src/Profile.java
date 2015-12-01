@@ -59,6 +59,7 @@ public class Profile extends JPanel {
 		add(scrollPane2, gbc_table_1);
 		
 		table_friends = new JTable(model1);
+                table_friends.changeSelection(0, 0, false, false);
 		scrollPane2.setViewportView(table_friends);
 		
 		JLabel lblEmail = new JLabel("Email:");
