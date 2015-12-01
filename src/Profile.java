@@ -5,6 +5,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -60,6 +64,7 @@ public class Profile extends JPanel {
         };
 		if(cont.model.getFriends() != null){
 			ArrayList<User> friends = cont.model.getFriends();
+                        friends.add(0, cont.model.getUser());
 			for (User s : friends) {
 	
 				Object[] person = {s.id, s.email, s.fname, s.lname,new Boolean(false) };
@@ -141,7 +146,7 @@ public class Profile extends JPanel {
 		gbc_lblLName.gridy = 3;
 		add(lblLName, gbc_lblLName);
 		
-		newLName = new JTextField();
+		newLName = new JTextField(cont.model.getUser().lname);
 		GridBagConstraints gbc_newLName = new GridBagConstraints();
 		gbc_newLName.insets = new Insets(0, 0, 5, 5);
 		gbc_newLName.fill = GridBagConstraints.HORIZONTAL;
@@ -161,6 +166,31 @@ public class Profile extends JPanel {
 		gbc_btnDeleteFriend.gridx = 7;
 		gbc_btnDeleteFriend.gridy = 4;
 		add(btnDeleteFriend, gbc_btnDeleteFriend);
+                
+                if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
+                table_friends.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (table_friends.isRowSelected(0)) btnDeleteFriend.setEnabled(false);
+                        else btnDeleteFriend.setEnabled(true);
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                    }
+                });
 		
 		JButton btnUpdate = new JButton("Update");
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
