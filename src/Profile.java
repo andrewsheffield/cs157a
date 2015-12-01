@@ -70,7 +70,9 @@ public class Profile extends JPanel {
                }
              }
         };
+                table_friends.removeAll();
 		if(cont.model.getFriends() != null){
+                    System.out.println(cont.model.getFriends());
 			ArrayList<User> friends = cont.model.getFriends();
                         friends.add(0, cont.model.getUser());
 			for (User s : friends) {
@@ -147,16 +149,39 @@ public class Profile extends JPanel {
 		add(newLName, gbc_newLName);
 		newLName.setColumns(10);
 		
-		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Quantity", "Send to Friend"};
+		Object[] columnNames = {"ID", "Movie Name", "Screen #", "TimeStamp", "Cancel Ticket", "Send to Selected Friend"};
 		Object[][] data = {};
-		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        switch(columnIndex) {
+                            case 4:
+                                return Boolean.class;
+                            case 5:
+                                return Boolean.class;
+                        }
+                        return String.class;
+                    }
+                    @Override
+                     public boolean isCellEditable(int row, int column) {
+                       switch(column){
+                       case 4:
+                           return true;
+                       case 5:
+                           return true;
+                       default:
+                           return false;
+                       }
+                     }
+        
+                };
 		if(cont.model.getPurchasedTickets() != null)
 		{
 			ArrayList<Ticket> tickets = cont.model.getPurchasedTickets();
 			for(Ticket ticket: tickets)
 			{
 				Object[] ticketData = {ticket.showing.showingID, ticket.showing.movie.title, ticket.showing.screen.id,
-						ticket.purchaseTimestamp, new Integer(1), new Integer(0)};
+						ticket.purchaseTimestamp, new Boolean(false), new Boolean(false)};
 				model.addRow(ticketData);
 				
 			}

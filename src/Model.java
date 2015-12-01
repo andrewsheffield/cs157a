@@ -288,7 +288,12 @@ public class Model {
      * @return an ArrayList of Users
      */
     public ArrayList<User> getFriends() {
-        return friends;
+        try {
+            return dal.getFriends(currentUser.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     /** NEEDS IMPLEMENATION
