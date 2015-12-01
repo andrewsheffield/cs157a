@@ -482,8 +482,24 @@ public class DataAccess {
     
     }
 
-    public void removeShowing(int showingID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeShowing(int showingID) throws SQLException{
+        PreparedStatement pstmt = null;
+        String deleteShowingQuery = "DELETE FROM showing WHERE ShowingID=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            pstmt = conn.prepareStatement(deleteShowingQuery);
+            pstmt.setInt(1, showingID);
+            pstmt.execute();
+
+            
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            pstmt.close();
+        }
     }
 
     public ArrayList<User> getFriends(int id) throws SQLException {

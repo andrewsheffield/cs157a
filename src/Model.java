@@ -14,6 +14,7 @@ public class Model {
     
     public String showingSearchQuery = "";
     public String userSearchString = "";
+    public String movieSearchString = "";
     
     private User currentUser = null;
     private ArrayList<User> friends;
@@ -21,6 +22,7 @@ public class Model {
     //Model has exclusive access to the data access layer.
     private final DataAccess dal = new DataAccess();
     private final MovieAccess mal = new MovieAccess();
+    
 
     public boolean isLoggedIn() {
         return (currentUser != null);
