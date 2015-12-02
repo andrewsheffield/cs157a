@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showingArchive` (
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenIDArchive`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`screen` (`ScreenID`))
+    REFERENCES `theaterpro`.`showing` (`ScreenID`))
 ;
 
 -- -----------------------------------------------------
@@ -139,10 +139,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketArchive` (
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderIDArchive`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`),
+    REFERENCES `theaterpro`.`ticket` (`UserID`),
   CONSTRAINT `ShowingIDArchive`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
+    REFERENCES `theaterpro`.`ticket` (`ShowingID`))
 ;
 
 -- -----------------------------------------------------
