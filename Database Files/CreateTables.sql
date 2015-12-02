@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showingArchive` (
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenIDArchive`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`showing` (`ScreenID`))
+    REFERENCES `theaterpro`.`screen` (`ScreenID`))
 ;
 
 -- -----------------------------------------------------
@@ -139,10 +139,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketArchive` (
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderIDArchive`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`ticket` (`UserID`),
+    REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `ShowingIDArchive`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`ticket` (`ShowingID`))
+    REFERENCES `theaterpro`.`showingarchive` (`ShowingID`))
 ;
 
 -- -----------------------------------------------------
@@ -240,8 +240,8 @@ BEGIN
 START TRANSACTION;
 INSERT INTO showingArchive
 SELECT ShowingID, ScreenID, imdbID, startTimestamp, endTimestamp
-FROM showing WHERE updatedAt < cutOff;
-DELETE FROM showing WHERE updatedAt < cutOff; COMMIT; END; //
+FROM ticket WHERE updatedAt < cutOff;
+DELETE FROM ticket WHERE updatedAt < cutOff; COMMIT; END; //
 DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
