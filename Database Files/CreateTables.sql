@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showingArchive` (
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenIDArchive`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`showing` (`ScreenID`))
+    REFERENCES `theaterpro`.`screen` (`ScreenID`))
 ;
 
 -- -----------------------------------------------------
@@ -139,10 +139,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketArchive` (
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderIDArchive`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`ticket` (`UserID`),
+    REFERENCES `theaterpro`.`user` (`UserID`),
   CONSTRAINT `ShowingIDArchive`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`ticket` (`ShowingID`))
+    REFERENCES `theaterpro`.`showingArchive` (`ShowingID`))
 ;
 
 -- -----------------------------------------------------
@@ -215,34 +215,28 @@ END //
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Procedure archiveTickets()
+-- Procedure archive()
 -- -----------------------------------------------------
 
-DROP PROCEDURE IF EXISTS archiveTickets;
+DROP PROCEDURE IF EXISTS archive;
 DELIMITER //
-CREATE PROCEDURE archiveTickets(IN cutOff TIMESTAMP)
+CREATE PROCEDURE archive(IN cutOff TIMESTAMP)
 BEGIN
-START TRANSACTION;
-INSERT INTO ticketArchive
-SELECT UserID, ShowingID
-FROM ticket WHERE updatedAt < cutOff;
-DELETE FROM ticket WHERE updatedAt < cutOff; COMMIT; END; //
-DELIMITER ;
-
--- -----------------------------------------------------
--- Procedure archiveShowings()
--- -----------------------------------------------------
-
-DROP PROCEDURE IF EXISTS archiveShowings;
-DELIMITER //
-CREATE PROCEDURE archiveShowings(IN cutOff TIMESTAMP)
-BEGIN 
 START TRANSACTION;
 INSERT INTO showingArchive
 SELECT ShowingID, ScreenID, imdbID, startTimestamp, endTimestamp
 FROM showing WHERE updatedAt < cutOff;
-DELETE FROM showing WHERE updatedAt < cutOff; COMMIT; END; //
+INSERT INTO ticketArchive
+SELECT UserID, ShowingID
+FROM ticket WHERE updatedAt < cutOff;
+COMMIT;
+START TRANSACTION;
+DELETE FROM ticket WHERE updatedAt < cutOff;
+DELETE FROM showing WHERE updatedAt < cutOff;
+COMMIT;
+END; //
 DELIMITER ;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
