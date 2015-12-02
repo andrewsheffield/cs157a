@@ -240,8 +240,8 @@ BEGIN
 START TRANSACTION;
 INSERT INTO showingArchive
 SELECT ShowingID, ScreenID, imdbID, startTimestamp, endTimestamp
-FROM ticket WHERE updatedAt < cutOff;
-DELETE FROM ticket WHERE updatedAt < cutOff; COMMIT; END; //
+FROM showing WHERE updatedAt < cutOff;
+DELETE FROM showing WHERE updatedAt < cutOff; COMMIT; END; //
 DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
