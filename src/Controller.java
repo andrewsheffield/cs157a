@@ -175,4 +175,8 @@ public class Controller {
         model.userSearchString = text;
     }
 
+    void archive(Timestamp ts) {
+        model.archive(ts);
+    }
+
 }

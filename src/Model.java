@@ -430,6 +430,14 @@ public class Model {
         }
     }
 
+    void archive(Timestamp ts) {
+        try {
+            dal.archive(ts);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
 
 }

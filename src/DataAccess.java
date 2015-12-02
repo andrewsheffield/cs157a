@@ -661,7 +661,6 @@ public class DataAccess {
             pstmt.setInt(2, userID);
             pstmt.setInt(3, ShowingID);
             pstmt.setInt(4, amount);
-            System.out.println(pstmt.toString());
             pstmt.execute();
 
         }
@@ -742,6 +741,37 @@ public class DataAccess {
             pstmt.close();
         }
         
+    }
+
+    void archive(Timestamp ts) throws SQLException {
+        PreparedStatement pstmt = null;
+        
+        String archiveTicketQuery = "{call archiveTickets(?)}";
+        String archiveShowingsQuery = "{call archiveShowings(?)}";
+        
+        
+        try {
+            Connection conn = DriverManager.getConnection(databaseURI);
+            
+            pstmt = conn.prepareStatement(archiveTicketQuery);
+            pstmt.setTimestamp(1, ts);
+            pstmt.execute();
+            
+            pstmt = conn.prepareStatement(archiveShowingsQuery);
+            pstmt.setTimestamp(1, ts);
+            pstmt.execute();
+            
+            
+            
+            
+
+        }
+        catch(SQLException e) {
+            System.out.println(e);
+        }
+        finally {
+            pstmt.close();
+        }
     }
     
     

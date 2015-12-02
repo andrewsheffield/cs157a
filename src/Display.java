@@ -284,6 +284,14 @@ public class Display extends JPanel {
 			gbc_btnLogout.gridx = 2;
 			gbc_btnLogout.gridy = 3;
 			add(btnLogout, gbc_btnLogout);
+                        
+                        btnLogout.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                cont.logout();
+                                System.exit(0);
+                            }
+                        });
 			
 			
 			GridBagConstraints gbc_btnBuy = new GridBagConstraints();

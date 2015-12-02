@@ -35,11 +35,13 @@ public class AdminPanel extends JPanel {
 		AdminUserPanel adminUser = new AdminUserPanel(cont);
                 AdminScreenPanel adminScreen = new AdminScreenPanel(cont);
                 AdminShowPanel adminShow = new AdminShowPanel(cont);
+                AdminArchivePanel archive = new AdminArchivePanel(cont);
                 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.add("Set Admins", adminUser);
                 tabbedPane.add("Screens", adminScreen);
                 tabbedPane.add("Showings", adminShow);
+                tabbedPane.add("Archive", archive);
 		add(tabbedPane);
         
         
