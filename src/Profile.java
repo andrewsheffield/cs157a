@@ -72,7 +72,6 @@ public class Profile extends JPanel {
         };
                 table_friends.removeAll();
 		if(cont.model.getFriends() != null){
-                    System.out.println(cont.model.getFriends());
 			ArrayList<User> friends = cont.model.getFriends();
                         friends.add(0, cont.model.getUser());
 			for (User s : friends) {

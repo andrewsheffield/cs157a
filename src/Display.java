@@ -23,6 +23,8 @@ import javax.swing.JTable;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Display extends JPanel {
 	private JTextField query;
@@ -30,10 +32,10 @@ public class Display extends JPanel {
 	private JScrollPane scrollPane;
 	private JButton btnBuy;
         private JButton btnSearch;
-	private JCheckBox chckbx3D;
-	private JCheckBox chckbxIMAX;
-	private JCheckBox chckbxXD;
-	private JCheckBox chckbxDBOX;
+	private JCheckBox chckbx3D = new JCheckBox("3D");
+	private JCheckBox chckbxIMAX = new JCheckBox("IMAX");
+	private JCheckBox chckbxXD = new JCheckBox("XD");
+	private JCheckBox chckbxDBOX = new JCheckBox("DBOX");
 	private JLabel lblFilters;
         private Controller cont;
         private JButton btnLogout;
@@ -65,6 +67,62 @@ public class Display extends JPanel {
 			gbc_query.gridy = 0;
 			add(query, gbc_query);
 			query.setColumns(10);
+                        
+                        lblFilters = new JLabel("Filters:");
+			GridBagConstraints gbc_lblFilters = new GridBagConstraints();
+			gbc_lblFilters.insets = new Insets(0, 0, 5, 5);
+			gbc_lblFilters.gridx = 2;
+			gbc_lblFilters.gridy = 1;
+			add(lblFilters, gbc_lblFilters);
+			
+			GridBagConstraints gbc_chckbx3D = new GridBagConstraints();
+			gbc_chckbx3D.insets = new Insets(0, 0, 5, 5);
+			gbc_chckbx3D.gridx = 3;
+			gbc_chckbx3D.gridy = 1;
+			add(chckbx3D, gbc_chckbx3D);
+                        chckbx3D.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                render();
+                            }
+                        });
+			
+			GridBagConstraints gbc_chckbxIMAX = new GridBagConstraints();
+			gbc_chckbxIMAX.insets = new Insets(0, 0, 5, 5);
+			gbc_chckbxIMAX.gridx = 4;
+			gbc_chckbxIMAX.gridy = 1;
+			add(chckbxIMAX, gbc_chckbxIMAX);
+                        chckbxIMAX.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                render();
+                            }
+                        });
+                        
+			
+			GridBagConstraints gbc_chckbxXD = new GridBagConstraints();
+			gbc_chckbxXD.insets = new Insets(0, 0, 5, 5);
+			gbc_chckbxXD.gridx = 5;
+			gbc_chckbxXD.gridy = 1;
+			add(chckbxXD, gbc_chckbxXD);
+                        chckbxXD.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                render();
+                            }
+                        });
+			
+			GridBagConstraints gbc_chckbxDBOX = new GridBagConstraints();
+			gbc_chckbxDBOX.insets = new Insets(0, 0, 5, 5);
+			gbc_chckbxDBOX.gridx = 6;
+			gbc_chckbxDBOX.gridy = 1;
+			add(chckbxDBOX, gbc_chckbxDBOX);
+                        chckbxDBOX.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                render();
+                            }
+                        });
 			
 			Object[] columnNames = {"ID", "Movie Name", "Screen #", "Show Time", "IMAX", "3D", "XD", "DBOX", "Quanitity"};
 			Object[][] data = {};
@@ -100,13 +158,41 @@ public class Display extends JPanel {
 	                    for (Showing s : showings) {
 	
 	                        Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
-	                        model.addRow(showing);
+	                        if (chckbxIMAX.isSelected() && s.screen.imax) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbx3D.isSelected() && s.screen.threeD) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbxXD.isSelected() && s.screen.xd) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbxDBOX.isSelected() && s.screen.dbox) {
+                                    model.addRow(showing);
+                                }
+                                else if (!chckbx3D.isSelected() && !chckbxIMAX.isSelected() && !chckbxXD.isSelected() && !chckbxDBOX.isSelected()) {
+                                    model.addRow(showing);
+                                }
 	                    }   
 	                } else {
 	                    ArrayList<Showing> showings = cont.model.getShowingsByMovieTitle(cont.model.showingSearchQuery);
 	                    for (Showing s : showings) {
 	                        Object[] showing = {s.showingID, s.movie.title, s.screen.name, s.timestamp, s.screen.imax, s.screen.threeD, s.screen.xd, s.screen.dbox, new Integer(0)};
-	                        model.addRow(showing);
+                                if (chckbxIMAX.isSelected() && s.screen.imax) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbx3D.isSelected() && s.screen.threeD) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbxXD.isSelected() && s.screen.xd) {
+                                    model.addRow(showing);
+                                }
+                                else if (chckbxDBOX.isSelected() && s.screen.dbox) {
+                                    model.addRow(showing);
+                                }
+                                else if (!chckbx3D.isSelected() && !chckbxIMAX.isSelected() && !chckbxXD.isSelected() && !chckbxDBOX.isSelected()) {
+                                    model.addRow(showing);
+                                }
 	                    }   
 	                }
 	
@@ -190,40 +276,7 @@ public class Display extends JPanel {
 	                });
 	
 			
-			lblFilters = new JLabel("Filters:");
-			GridBagConstraints gbc_lblFilters = new GridBagConstraints();
-			gbc_lblFilters.insets = new Insets(0, 0, 5, 5);
-			gbc_lblFilters.gridx = 2;
-			gbc_lblFilters.gridy = 1;
-			add(lblFilters, gbc_lblFilters);
 			
-			chckbx3D = new JCheckBox("3D");
-			GridBagConstraints gbc_chckbx3D = new GridBagConstraints();
-			gbc_chckbx3D.insets = new Insets(0, 0, 5, 5);
-			gbc_chckbx3D.gridx = 3;
-			gbc_chckbx3D.gridy = 1;
-			add(chckbx3D, gbc_chckbx3D);
-			
-			chckbxIMAX = new JCheckBox("IMAX");
-			GridBagConstraints gbc_chckbxIMAX = new GridBagConstraints();
-			gbc_chckbxIMAX.insets = new Insets(0, 0, 5, 5);
-			gbc_chckbxIMAX.gridx = 4;
-			gbc_chckbxIMAX.gridy = 1;
-			add(chckbxIMAX, gbc_chckbxIMAX);
-			
-			chckbxXD = new JCheckBox("XD");
-			GridBagConstraints gbc_chckbxXD = new GridBagConstraints();
-			gbc_chckbxXD.insets = new Insets(0, 0, 5, 5);
-			gbc_chckbxXD.gridx = 5;
-			gbc_chckbxXD.gridy = 1;
-			add(chckbxXD, gbc_chckbxXD);
-			
-			chckbxDBOX = new JCheckBox("DBOX");
-			GridBagConstraints gbc_chckbxDBOX = new GridBagConstraints();
-			gbc_chckbxDBOX.insets = new Insets(0, 0, 5, 5);
-			gbc_chckbxDBOX.gridx = 6;
-			gbc_chckbxDBOX.gridy = 1;
-			add(chckbxDBOX, gbc_chckbxDBOX);
 			
 			btnLogout = new JButton("Logout");
 			GridBagConstraints gbc_btnLogout = new GridBagConstraints();
