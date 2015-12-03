@@ -746,21 +746,15 @@ public class DataAccess {
     void archive(Timestamp ts) throws SQLException {
         PreparedStatement pstmt = null;
         
-        String archiveTicketQuery = "{call archiveTickets(?)}";
-        String archiveShowingsQuery = "{call archiveShowings(?)}";
+        String archiveQuery = "{call archive(?)}";
         
         
         try {
             Connection conn = DriverManager.getConnection(databaseURI);
             
-            pstmt = conn.prepareStatement(archiveTicketQuery);
+            pstmt = conn.prepareStatement(archiveQuery);
             pstmt.setTimestamp(1, ts);
             pstmt.execute();
-            
-            pstmt = conn.prepareStatement(archiveShowingsQuery);
-            pstmt.setTimestamp(1, ts);
-            pstmt.execute();
-            
             
             
             
