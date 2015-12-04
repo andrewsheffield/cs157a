@@ -247,10 +247,10 @@ public class Profile extends JPanel {
                                     public void actionPerformed(ActionEvent e) {
                                         int rowCount = table.getRowCount();
                                         TableModel data = table.getModel();
+                                        int selected = table_friends.getSelectedRow();
+                                        int friendID = (Integer) model1.getValueAt(selected, 0);
                                         for (int i=0;i<rowCount;i++) {
                                             int showingID = (Integer) data.getValueAt(i, 0);
-                                            int selected = table_friends.getSelectedRow();
-                                            int friendID = (Integer) model1.getValueAt(selected, 0);
                                             boolean cancelTicket = (Boolean) data.getValueAt(i, 4);
                                             boolean sendToFriend = (Boolean) data.getValueAt(i, 5);
                                             if (cancelTicket) {
@@ -259,8 +259,9 @@ public class Profile extends JPanel {
                                             else if (sendToFriend) {
                                                 cont.sendTicketToFriend(friendID, showingID, 1);
                                             }
-                                            render();
+                                            
                                         }
+                                        render();
                                     }
                                 });
                                 

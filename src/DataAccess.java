@@ -230,24 +230,21 @@ public class DataAccess {
         PreparedStatement pstmt = null;
         Connection conn = DriverManager.getConnection(databaseURI);
         String valueAmount = "INSERT INTO ticket(UserID, ShowingID) Values (?, ?)";
-        for (int i = 1; i < amount; i++) {
-            valueAmount += ", (?, ?)";
-        }
-
+        
         try {
 
             pstmt = conn.prepareStatement(valueAmount);
-            for (int i = 1; i < amount*2; i++) {
-            	pstmt.setInt(i, userID);
-                i++;
-            	pstmt.setInt(i, showingID);
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, showingID);
+            
+            for (int i=0; i < amount; i++) {
+                pstmt.execute();
             }
 
-            pstmt.execute();
             return true;
         }
         catch(SQLException e) {
-            System.out.println(e);
+            System.out.println("Purchase Query-" + e);
             return false;
         }
         finally {
@@ -761,7 +758,7 @@ public class DataAccess {
 
         }
         catch(SQLException e) {
-            System.out.println(e);
+            System.out.println("Archive Query-" + e);
         }
         finally {
             pstmt.close();

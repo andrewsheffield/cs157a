@@ -62,11 +62,15 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`friend` (
   INDEX `FriendID_idx` (`FriendID` ASC),
   CONSTRAINT `UserID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`),
+    REFERENCES `theaterpro`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `FriendID`
     FOREIGN KEY (`FriendID`)
-    REFERENCES `theaterpro`.`user` (`UserID`))
-;
+    REFERENCES `theaterpro`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 
 -- -----------------------------------------------------
@@ -86,8 +90,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showing` (
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenID`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`screen` (`ScreenID`))
-;
+    REFERENCES `theaterpro`.`screen` (`ScreenID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- Table `theaterpro`.`showingArchive`
@@ -100,13 +106,16 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`showingArchive` (
   `imdbID` VARCHAR(45) NULL,
   `startTimestamp` DATETIME NULL,
   `endTimestamp` DATETIME NULL,
+  `updatedAt` TIMESTAMP NULL,
   PRIMARY KEY (`ShowingID`) ,
   UNIQUE INDEX `showingID_UNIQUE` (`ShowingID` ASC) ,
   INDEX `ScreenID_idx` (`ScreenID` ASC) ,
   CONSTRAINT `ScreenIDArchive`
     FOREIGN KEY (`ScreenID`)
-    REFERENCES `theaterpro`.`screen` (`ScreenID`))
-;
+    REFERENCES `theaterpro`.`screen` (`ScreenID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- Table `theaterpro`.`ticket`
@@ -121,11 +130,15 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`ticket` (
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`),
+    REFERENCES `theaterpro`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `ShowingID`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showing` (`ShowingID`))
-;
+    REFERENCES `theaterpro`.`showing` (`ShowingID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- Table `theaterpro`.`ticketArchive`
@@ -135,15 +148,20 @@ DROP TABLE IF EXISTS `theaterpro`.`ticketArchive` ;
 CREATE TABLE IF NOT EXISTS `theaterpro`.`ticketArchive` (
   `UserID` INT NULL,
   `ShowingID` INT NULL,
+  `updatedAt` TIMESTAMP NULL,
   INDEX `UserID_idx` (`UserID` ASC) ,
   INDEX `ShowingID_idx` (`ShowingID` ASC) ,
   CONSTRAINT `TicketHolderIDArchive`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`),
+    REFERENCES `theaterpro`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `ShowingIDArchive`
     FOREIGN KEY (`ShowingID`)
-    REFERENCES `theaterpro`.`showingArchive` (`ShowingID`))
-;
+    REFERENCES `theaterpro`.`showingArchive` (`ShowingID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- Table `theaterpro`.`auth`
@@ -156,8 +174,10 @@ CREATE TABLE IF NOT EXISTS `theaterpro`.`auth` (
   INDEX `UserID_idx` (`UserID` ASC) ,
   CONSTRAINT `AuthID`
     FOREIGN KEY (`UserID`)
-    REFERENCES `theaterpro`.`user` (`UserID`))
-;
+    REFERENCES `theaterpro`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- View friendView
@@ -174,16 +194,19 @@ CREATE VIEW friendView AS
 
 
 -- -----------------------------------------------------
--- Trigger deleteFriendTrigger
+-- Trigger free ticket
 -- -----------------------------------------------------
-DROP TRIGGER IF EXISTS deleteFriendTrigger;
+DROP TRIGGER IF EXISTS freeTicket;
 
 DELIMITER //
-CREATE TRIGGER deleteFriendTrigger
-BEFORE DELETE ON user FOR EACH ROW
+CREATE TRIGGER freeTicket
+AFTER INSERT ON user FOR EACH ROW
 BEGIN
-DELETE FROM friend WHERE old.UserID = UserID;
-DELETE FROM friend WHERE old.UserID = FriendID;
+  INSERT INTO ticket(UserID, ShowingID) VALUES
+  (
+    new.UserID, 
+    (select ShowingID from showing order by startTimestamp DESC Limit 1)
+  );
 END //
 DELIMITER ;
 
@@ -204,17 +227,6 @@ END //
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Procedure getAllUsers()
--- -----------------------------------------------------
-DROP PROCEDURE IF EXISTS getAllUsers;
-DELIMITER //
-CREATE PROCEDURE getAllUsers ()
-BEGIN
-  SELECT * FROM user;
-END //
-DELIMITER ;
-
--- -----------------------------------------------------
 -- Procedure archive()
 -- -----------------------------------------------------
 
@@ -224,14 +236,16 @@ CREATE PROCEDURE archive(IN cutOff TIMESTAMP)
 BEGIN
 START TRANSACTION;
 INSERT INTO showingArchive
-SELECT ShowingID, ScreenID, imdbID, startTimestamp, endTimestamp
+SELECT *
 FROM showing WHERE updatedAt < cutOff;
 INSERT INTO ticketArchive
-SELECT UserID, ShowingID
+SELECT *
 FROM ticket WHERE updatedAt < cutOff;
 COMMIT;
 START TRANSACTION;
 DELETE FROM ticket WHERE updatedAt < cutOff;
+COMMIT;
+START TRANSACTION;
 DELETE FROM showing WHERE updatedAt < cutOff;
 COMMIT;
 END; //

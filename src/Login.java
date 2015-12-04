@@ -50,7 +50,7 @@ public class Login extends JPanel {
 		gbc_lblLogin.gridy = 3;
 		add(lblLogin, gbc_lblLogin);
 		
-		login = new JTextField("bsmith@sjsu.edu");
+		login = new JTextField("");
 		GridBagConstraints gbc_login = new GridBagConstraints();
 		gbc_login.insets = new Insets(0, 0, 5, 5);
 		gbc_login.fill = GridBagConstraints.HORIZONTAL;
@@ -66,7 +66,7 @@ public class Login extends JPanel {
 		gbc_lblPassword.gridy = 5;
 		add(lblPassword, gbc_lblPassword);
 		
-		password = new JTextField("password");
+		password = new JTextField("");
 		GridBagConstraints gbc_password = new GridBagConstraints();
 		gbc_password.insets = new Insets(0, 0, 5, 5);
 		gbc_password.fill = GridBagConstraints.HORIZONTAL;

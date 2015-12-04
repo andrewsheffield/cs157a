@@ -270,8 +270,9 @@ public class Display extends JPanel {
 	                            int amount = (Integer) model.getValueAt(i, 8);
 	                            
 	                            cont.purchaseTickets(showingID, amount);
-                                    cont.model.view.render();
 	                        }
+                                cont.model.view.render();
+
 	                    }
 	                });
 	
