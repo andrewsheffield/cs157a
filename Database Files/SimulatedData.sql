@@ -66,11 +66,11 @@ WHERE ShowingID>19;
 
 -- BUILD SAMPLE USERS
 
-INSERT INTO user(FirstName, LastName, Email) VALUES
-("Andrew", "Sheffield", "andrewsheffield@cs157a.com"),
-("Peter", "Pham", "peterpham@cs157a.com"),
-("Bowen", "Chan", "bowenchan@cs157a.com"),
-("Suneuy", "Kim", "suneuy.kim@sjsu.edu");
+INSERT INTO user(FirstName, LastName, Email, isAdmin) VALUES
+("Andrew", "Sheffield", "andrewsheffield@cs157a.com", 0),
+("Peter", "Pham", "peterpham@cs157a.com", 0),
+("Bowen", "Chan", "bowenchan@cs157a.com", 0),
+("Suneuy", "Kim", "suneuy.kim@sjsu.edu", 0);
 
 INSERT INTO auth(UserID, hPassword) VALUES
 (1, 312768894),
